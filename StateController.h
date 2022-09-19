@@ -1,8 +1,7 @@
-#include "PZMIDI8.h"
+ #include "PZMIDI8.h"
 
 #ifndef StateController_h
 #define StateController_h
-
 
 // Rotary encoder pins
 #define ROTARY_DATA_PIN 3
@@ -21,11 +20,12 @@ class StateController {
     public:
         StateController();
         void update(void);
+        int8_t getSelectedChannel(void);
 
 
     private:
-        Channel* _channel;
-        Adafruit_SSD1306* _display;
+//        Channel* _channel;
+//        Adafruit_SSD1306* _display;
         int8_t _selectedChannel;
         int8_t _encoderPosition;
         void _selectChannel(void);

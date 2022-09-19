@@ -1,7 +1,8 @@
-#include "PZMIDI8.h"
+// #include "PZMIDI8.h"
+// #include "GlobalObjects.h"
 
-#ifndef Channel_h
-#define Channel_h
+#ifndef CHANNEL_h
+#define CHANNEL_h
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels

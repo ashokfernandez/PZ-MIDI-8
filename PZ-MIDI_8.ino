@@ -4,6 +4,7 @@
 
 #include "Channel.h"
 #include "StateController.h"
+#include "ViewController.h"
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 // The pins for I2C are defined by the Wire-library. 
@@ -23,7 +24,7 @@ void _encoderISR(void) { encoder.tick(); }
 void _buttonISR(void) { button.read(); }
 
 // Single global instances in heap mem of key objects
-StateController state();
+StateController* state = new StateController();
 Channel channels[] = {
   Channel(bitmapLabel_channel1), 
   Channel(bitmapLabel_channel2), 
@@ -65,7 +66,7 @@ void loop() {
     }
     
     for(int8_t i=0; i<25; i++){
-      state.update();
+      state->update();
       delay(10);
     }
 

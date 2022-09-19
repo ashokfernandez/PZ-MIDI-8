@@ -1,3 +1,4 @@
+#include "PZMIDI8.h"
 #include "Channel.h"
 
 Channel::Channel(const unsigned char* bitmapLabel) {

@@ -1,14 +1,7 @@
 // Handles external inputs and what they do to the state of the application. 
 // call update to process a round of inputs and state updates
 #include "StateController.h"
-
-
-// Import the global references to objects on the heap 
-extern RotaryEncoder encoder;
-extern EasyButton button;
-extern Adafruit_SSD1306 display;
-extern StateController controller;
-extern channels
+#include "GlobalObjects.h"
 
 void buttonClicked(void) { Serial.println("Button clicked"); }
 void buttonLongClicked(void) { Serial.println("Button long pressed"); }
@@ -31,7 +24,11 @@ void StateController::update(void) {
         this->_encoderPosition = newPos;
     }
 
-    this->drawChannelList();
+//    this->drawChannelList();
+}
+
+int8_t StateController::getSelectedChannel(void) {
+  return this->_selectedChannel;
 }
 
 void StateController::_incrementSelectedChannel(void) {
