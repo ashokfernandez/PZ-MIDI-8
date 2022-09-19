@@ -35,7 +35,7 @@ Channel channels[] = {
 };
 
 // Callbacks to be executed by the task scheduler
-void drawDisplay() { view->drawChannelList(); }
+void drawDisplay() { view->drawDisplay(); }
 void updateState() { state->update(); }
 void simulateInputLevels() {
   for(int8_t i=0; i<NUM_CHANNELS; i++){

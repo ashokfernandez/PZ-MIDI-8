@@ -3,10 +3,26 @@
 #include "StateController.h"
 #include "GlobalObjects.h"
 
-void buttonClicked(void) { Serial.println("Button clicked"); }
-void buttonLongClicked(void) { Serial.println("Button long pressed"); }
+// Value to set the selected channel variable to if no channel is selected
+#define NO_CHANNEL_SELECTED -10
+
+void buttonClicked(void) { 
+    
+}
+
+void buttonLongClicked(void) { 
+  switch(state->getCurrentState()) {
+    case CHANNEL_LIST:
+      state->setCurrentState(CHANNEL_EDIT);
+      break;
+    case CHANNEL_EDIT:
+      state->setCurrentState(CHANNEL_LIST);
+      break;
+  }
+}
 
 StateController::StateController(){  
+  _currentState = CHANNEL_LIST;
   _encoderPosition = 0;
   _selectedChannel = -1;
   _encoderLastChanged_ms = 0;
@@ -19,17 +35,28 @@ void StateController::update(void) {
     button.update();
 
     // If the encoder moved...
-    int newPos = encoder.getPosition();
-    if (this->_encoderPosition != newPos) {
+    int newEncoderPosition = encoder.getPosition();
+    if (this->_encoderPosition != newEncoderPosition) {
         this->_encoderLastChanged_ms = millis();
         this->_selectChannel();
-        this->_encoderPosition = newPos;
+        this->_encoderPosition = newEncoderPosition;
     }
 
+    // If enough time has elaspsed since the last encoder move, deselect the selected channel
     if (millis() - this->_encoderLastChanged_ms > SELECT_CHANNEL_TIMEOUT_MS) {
       this->_deselectChannel();
     }
 }
+
+int8_t StateController::getCurrentState(void) {
+  return this->_currentState;
+}
+
+
+void  StateController::setCurrentState(uint8_t state) {
+  this->_currentState = state;
+}
+
 
 int8_t StateController::getSelectedChannel(void) {
   return this->_selectedChannel;
@@ -47,7 +74,7 @@ void StateController::_selectChannel(void) {
 }
 
 void StateController::_deselectChannel(void) {
-  this->_selectedChannel = -1;
+  this->_selectedChannel = NO_CHANNEL_SELECTED;
 }
 
 void StateController::_incrementSelectedChannel(void) {

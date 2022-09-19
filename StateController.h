@@ -14,6 +14,9 @@
 // Timeout if no interactions happen
 #define SELECT_CHANNEL_TIMEOUT_MS 5000
 
+// Different states the application can be in 
+enum STATES { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
+
 // TODO Setup state changes for callbacks
 void buttonClicked(void);
 void buttonLongClicked(void);
@@ -23,14 +26,23 @@ class StateController {
     public:
         StateController();
         void update(void);
+        int8_t getCurrentState(void);
         int8_t getSelectedChannel(void);
-
+        
+        // Don't call this directly, exposed as a public method so the button callbacks can access it
+        void setCurrentState(uint8_t state);
 
     private:
-        // unsigned long _lastUpdate_ms;
-        unsigned long _encoderLastChanged_ms;
-        int8_t _selectedChannel;
+        // Current state
+        uint8_t _currentState;
+        
+
+        // Tracks encoder changes
         int8_t _encoderPosition;
+        unsigned long _encoderLastChanged_ms;
+
+        // Manages scrolling through channels on the channel list
+        int8_t _selectedChannel;
         void _selectChannel(void);
         void _deselectChannel(void);
         void _decrementSelectedChannel(void);
