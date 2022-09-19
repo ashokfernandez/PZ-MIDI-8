@@ -8,27 +8,46 @@ void buttonLongClicked(void) { Serial.println("Button long pressed"); }
 
 StateController::StateController(){  
   _encoderPosition = 0;
-  _selectedChannel = 0;
+  _selectedChannel = -1;
+  _encoderLastChanged_ms = 0;
 }
 
 
 void StateController::update(void) {
-    
-    encoder.tick(); // just call tick() to check the state.
+    // Get latest values from hardware
+    encoder.tick();
     button.update();
-    
-    int newPos = encoder.getPosition();
 
+    // If the encoder moved...
+    int newPos = encoder.getPosition();
     if (this->_encoderPosition != newPos) {
+        this->_encoderLastChanged_ms = millis();
         this->_selectChannel();
         this->_encoderPosition = newPos;
     }
 
-//    this->drawChannelList();
+    if (millis() - this->_encoderLastChanged_ms > SELECT_CHANNEL_TIMEOUT_MS) {
+      this->_deselectChannel();
+    }
 }
 
 int8_t StateController::getSelectedChannel(void) {
   return this->_selectedChannel;
+}
+
+void StateController::_selectChannel(void) {
+  int direction;
+  direction = (int)encoder.getDirection();
+  
+  if(direction > 0) { 
+    this->_incrementSelectedChannel(); 
+  } else if (direction < 0) { 
+    this->_decrementSelectedChannel(); 
+  }
+}
+
+void StateController::_deselectChannel(void) {
+  this->_selectedChannel = -1;
 }
 
 void StateController::_incrementSelectedChannel(void) {
@@ -49,14 +68,5 @@ void StateController::_decrementSelectedChannel(void) {
   }
 }
 
-void StateController::_selectChannel(void) {
-  static int direction;
-  direction = (int)encoder.getDirection();
-  if(direction > 0) { 
-    this->_incrementSelectedChannel(); 
-  } else if (direction < 0) { 
-    this->_decrementSelectedChannel(); 
-  }
-  // Serial.println(this->_selectedChannel);
-}
+
     

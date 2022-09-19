@@ -34,12 +34,20 @@ Channel channels[] = {
   Channel(bitmapLabel_channel8)
 };
 
+// Callbacks to be executed by the task scheduler
 void drawDisplay() { view->drawChannelList(); }
 void updateState() { state->update(); }
+void simulateInputLevels() {
+  for(int8_t i=0; i<NUM_CHANNELS; i++){
+    channels[i].setLevel(i*15);
+  }
+}
 
+// Setup the task scheduler to manage what should run when
 Scheduler taskScheduler;
 Task readInputs(TASK_IMMEDIATE, TASK_FOREVER, &updateState, &taskScheduler, true);
-Task updateDisplay(40 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskScheduler, true);
+Task updateDisplay(33 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskScheduler, true); // 33ms ~ 30fps
+Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
 
 void setup() {
   Serial.begin(9600);
@@ -64,14 +72,5 @@ void setup() {
 }
 
 void loop() {
-    // for(int8_t i=0; i<NUM_CHANNELS; i++){
-    //  channels[i].setLevel(i*17);
-    // }
-    
-    // for(int8_t i=0; i<25; i++){
-    //   state->update();
-    //   view->drawChannelList();
-    //   delay(10);
-    // }
   taskScheduler.execute();
 }
