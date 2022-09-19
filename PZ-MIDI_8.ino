@@ -1,6 +1,4 @@
-#include <hellodrum.h>
-#include <SPI.h>
-#include <Wire.h>
+#include "PZMIDI8.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
@@ -20,12 +18,12 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
 
-// Define ISRs for input sources
+// ISRs for external interrupts
+void _encoderISR(void) { encoder.tick(); }
+void _buttonISR(void) { button.read(); }
 
-// Setup the state controller
-StateController* controller; 
-
-// Setup the channels
+// Single global instances in heap mem of key objects
+StateController state();
 Channel channels[] = {
   Channel(bitmapLabel_channel1), 
   Channel(bitmapLabel_channel2), 
@@ -39,14 +37,8 @@ Channel channels[] = {
 
 
 
-
-
-
-
 void setup() {
   Serial.begin(9600);
-
-  controller = new StateController(channels);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -73,18 +65,8 @@ void loop() {
     }
     
     for(int8_t i=0; i<25; i++){
-      controller->update();
+      state.update();
       delay(10);
     }
-//    delay(10);
-    
-//    for(int8_t i=0; i<NUM_CHANNELS; i++){
-//     channel[i].setLevel(i*17);
-//    }
 
-  
-//  for(int8_t i=0; i<25; i++){
-//      drawChannels();
-//      delay(1);
-//    }
 }
