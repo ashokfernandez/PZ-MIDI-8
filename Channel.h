@@ -1,6 +1,8 @@
 // #include "PZMIDI8.h"
 // #include "GlobalObjects.h"
 
+#include "ChannelSettings.h"
+
 #ifndef CHANNEL_h
 #define CHANNEL_h
 
@@ -24,15 +26,31 @@
 
 class Channel {
 public:
-    Channel(const unsigned char* bitmapLabel);
+    Channel(const unsigned char* labelBitmap, ChannelSettings* settings);
 
-    // Draws the channel as a label and a meter on the display
+    // Methods to render the channel on the screen, either as a column in a list of channels
+    // or an edit screen of a single channel
     void drawListView(Adafruit_SSD1306 &display, uint8_t channelIndex, bool isSelected);
-    
+    void drawEdittView(Adafruit_SSD1306 &display, AppState appState);
+
+    // Manage a channels settings
+    ChannelSettings* getSettings(void);
+    void loadSettings(void); // todo, load settings to EEPROM
+    void saveSettings(void); // todo, save settings to EEPROM
+
+    // Takes an enum of a parameter and changes it
+    void incrementParameter(int8_t parameter);
+    void decrementParameter(int8_t parameter);
+
+    // Manual testing, should be replaced by a some kind of IO scan
     int8_t getLevel(void);
     void setLevel(int8_t);
+
+
+
 private:
-    const unsigned char* _label;
+    ChannelSettings* _settings;
+    const unsigned char* _labelBitmap;
     int8_t _level;
 
     int8_t _getMeterHeight(void);
