@@ -54,7 +54,7 @@ void Channel::drawListView(Adafruit_SSD1306 &display, uint8_t channelNumber, App
 
 }
 
-void Channel::drawEditView(Adafruit_SSD1306 &display, AppState appState){   
+void Channel::drawEditView(Adafruit_SSD1306 &display, StateController appState){   
 }
 
 

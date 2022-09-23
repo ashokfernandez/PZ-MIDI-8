@@ -1,4 +1,4 @@
- #include "PZMIDI8.h"
+#include "PZMIDI8.h"
 
 #ifndef StateController_h
 #define StateController_h
@@ -57,7 +57,7 @@ class StateController {
         int8_t selectedChannel;
         int8_t selectedParameter;
         uint16_t switchHoldTime_ms;
-        bool _parameterEditMode;
+        bool editingParameter;
 
         void buttonClicked(void);
         void buttonHeldFor_ms(uint16_t time_ms);

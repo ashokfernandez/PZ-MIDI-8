@@ -31,7 +31,7 @@ public:
     // Methods to render the channel on the screen, either as a column in a list of channels
     // or an edit screen of a single channel
     void drawListView(Adafruit_SSD1306 &display, uint8_t channelIndex, bool isSelected);
-    void drawEdittView(Adafruit_SSD1306 &display, AppState appState);
+    void drawEdittView(Adafruit_SSD1306 &display, StateController appState);
 
     // Manage a channels settings
     ChannelSettings* getSettings(void);

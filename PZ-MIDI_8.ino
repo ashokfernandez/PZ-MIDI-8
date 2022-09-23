@@ -22,7 +22,8 @@ void _buttonISR(void) { button.read(); }
 
 // Single global instances in heap mem of key objects
 StateController* state = new StateController();
-ViewController* view = new ViewController();
+ViewController* view = new ViewController(display, state);
+
 Channel channels[] = {
   Channel(bitmapLabel_channel1), 
   Channel(bitmapLabel_channel2), 
@@ -34,9 +35,33 @@ Channel channels[] = {
   Channel(bitmapLabel_channel8)
 };
 
+
+void buttonClicked(void) { 
+  state->buttonClicked();    
+}
+
+void buttonLongClicked(void) { 
+  state->buttonLongClicked();
+}
+
 // Callbacks to be executed by the task scheduler
 void drawDisplay() { view->drawDisplay(); }
-void updateState() { state->update(); }
+void updateState() { 
+  
+
+
+  // Check if the encoder moved
+  encoder.tick();
+  int direction = (int)encoder.getDirection();
+  
+  // if so, trigger a state update
+  if(direction > 0) { 
+    state->encoderIncremented();
+  } else if (direction < 0) { 
+    state->encoderDecremented();
+  }  
+}
+
 void simulateInputLevels() {
   for(int8_t i=0; i<NUM_CHANNELS; i++){
     channels[i].setLevel(i*15);

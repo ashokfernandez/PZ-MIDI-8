@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 int8_t clipValue(int8_t value, int8_t min, int8_t max, bool wrap) {
     // If we're wrapping around; set values below min to max, set values above max to min
     if (wrap) {
