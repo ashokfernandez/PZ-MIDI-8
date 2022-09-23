@@ -1,9 +1,8 @@
-#include "PZMIDI8.h"
 #include "Channel.h"
 #include "ChannelSettings.h"
 #include "Utils.h"
 
-Channel::Channel(const unsigned char* labelBitmap, ChannelSettings settings) {
+Channel::Channel(const unsigned char* labelBitmap, ChannelSettings* settings) {
   _labelBitmap = labelBitmap; // Label to display at the top of the list view
   _level = 0; // Meter display level
   _settings = settings;
@@ -11,13 +10,12 @@ Channel::Channel(const unsigned char* labelBitmap, ChannelSettings settings) {
 
 
 
-void Channel::drawListView(Adafruit_SSD1306 &display, uint8_t channelNumber, AppState appState){   
+void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected){   
 
     // Parameters for channel label
-    uint8_t boxStart = channelNumber * CHANNEL_WIDTH;
-    uint8_t boxWidth = CHANNEL_WIDTH;
-    uint8_t boxTop = 0;
-    uint8_t boxHeight = HEADER_HEIGHT;
+    uint8_t xOffset = channelNumber * CHANNEL_WIDTH;
+    uint8_t width = CHANNEL_WIDTH;
+    uint8_t yOffset = 0;
 
     // Parameters for the meter
     int8_t meterHeight = this->_getMeterHeight();
@@ -34,16 +32,16 @@ void Channel::drawListView(Adafruit_SSD1306 &display, uint8_t channelNumber, App
     }
     
     // Draw the label at the top of the channel      
-    display.drawBitmap(boxStart, boxTop, _label, CHANNEL_WIDTH, HEADER_HEIGHT, background, foreground);
+    display->drawBitmap(xOffset, yOffset, this->_labelBitmap, CHANNEL_WIDTH, HEADER_HEIGHT, background, foreground);
     
     // If the channel is selected, fill the meter background and draw a smaller meter in the negative space
     if(isSelected){
-        display.fillRect(boxStart, HEADER_HEIGHT, boxWidth, MAIN_DISPLAY_HEIGHT, background);  
-        display.fillRect(boxStart+1, meterOffset+1, boxWidth-2, meterHeight-1, foreground);
+        display->fillRect(xOffset, HEADER_HEIGHT, width, MAIN_DISPLAY_HEIGHT, background);  
+        display->fillRect(xOffset+1, meterOffset+1, width-2, meterHeight-1, foreground);
     }
     // Otherwise just fill the enter channel width with the meter
     else {
-        display.fillRect(boxStart, meterOffset, boxWidth, meterHeight, foreground);
+        display->fillRect(xOffset, meterOffset, width, meterHeight, foreground);
     }
 
     // Decay the meter value
@@ -54,7 +52,7 @@ void Channel::drawListView(Adafruit_SSD1306 &display, uint8_t channelNumber, App
 
 }
 
-void Channel::drawEditView(Adafruit_SSD1306 &display, StateController appState){   
+void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
 }
 
 
@@ -67,8 +65,8 @@ void Channel::setLevel(int8_t level){
   _level = level < 0 ? 0 : level;
 }
 
-ChannelSettings Channel::getSettings(void){
-  return this->settings;
+ChannelSettings* Channel::getSettings(void){
+  return this->_settings;
 }
 
 
@@ -84,8 +82,8 @@ int8_t Channel::_getMeterHeight(void){
 }
 
 void Channel::incrementParameter(int8_t parameter) {
-  this->settings.incrementParameter(parmeter);
+  this->_settings->incrementParameter(parameter);
 }
 void Channel::decrementParameter(int8_t parameter) {
-    this->settings.decrementParameter(parmeter);
+  this->_settings->decrementParameter(parameter);
 }

@@ -21,18 +21,20 @@ void _encoderISR(void) { encoder.tick(); }
 void _buttonISR(void) { button.read(); }
 
 // Single global instances in heap mem of key objects
-StateController* state = new StateController();
-ViewController* view = new ViewController(display, state);
+StateController* state;
+ViewController* view;
+
+#include "BitmapLabels.h"
 
 Channel channels[] = {
-  Channel(bitmapLabel_channel1), 
-  Channel(bitmapLabel_channel2), 
-  Channel(bitmapLabel_channel3), 
-  Channel(bitmapLabel_channel4), 
-  Channel(bitmapLabel_channel5), 
-  Channel(bitmapLabel_channel6), 
-  Channel(bitmapLabel_channel7), 
-  Channel(bitmapLabel_channel8)
+  Channel(bitmapLabel_channel1, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel2, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel3, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel4, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel5, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel6, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel7, new ChannelSettings(100, 5, 10, 30, 63)), 
+  Channel(bitmapLabel_channel8, new ChannelSettings(100, 5, 10, 30, 63))
 };
 
 
@@ -82,7 +84,7 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
-
+  
   // Attach interrupt for rotary encoder
   attachInterrupt(digitalPinToInterrupt(ROTARY_DATA_PIN), _encoderISR, CHANGE);
 
@@ -94,6 +96,9 @@ void setup() {
 
   // Reset display buffer
   display.clearDisplay();
+
+  state = new StateController();
+  view = new ViewController(&display, state);
 }
 
 void loop() {

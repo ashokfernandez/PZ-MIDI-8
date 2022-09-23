@@ -1,4 +1,4 @@
-#include "PZMIDI8.h"
+ #include "PZMIDI8.h"
 
 #ifndef StateController_h
 #define StateController_h
@@ -19,8 +19,6 @@
 // Different states the application can be in 
 enum PAGE { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
 
-#define NUM_PARAMETERS 5;
-enum EDIT_PARAMETER { NOTE, THRESHOLD, MAX, ATTACK_SCAN, RETRIGGER_DELAY };
 
 // Value to set the selected channel variable to if no channel is selected
 #define NO_CHANNEL_SELECTED -10
@@ -81,7 +79,7 @@ class StateController {
 
         void _incrementSelectedParameter(void);
         void _decrementSelectedParameter(void);
-        void _deselectAllParameters(void) 
+        void _deselectAllParameters(void); 
         
         void _incrementSelectedParameterValue(void);
         void _decrementSelectedParameterValue(void);

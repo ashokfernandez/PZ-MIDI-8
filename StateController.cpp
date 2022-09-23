@@ -81,7 +81,7 @@ void StateController::buttonClicked(void) {
   switch(this->page){
   
     // If we're on the channel list and a channel is selected, clicking will open the settings
-    case CHANNEL_LIST;
+    case CHANNEL_LIST:
       if (this->selectedChannel != NO_CHANNEL_SELECTED) {
         this->page = CHANNEL_EDIT;
       }
@@ -89,23 +89,23 @@ void StateController::buttonClicked(void) {
     
     // If we're on the edit screen, clicking will toggle between editing a parameter and 
     // scrolling through them
-    case CHANNEL_EDIT;  
+    case CHANNEL_EDIT:
       this->editingParameter = !this->editingParameter;
       break;
     
     // If we're currently saving, clicking does nothing
-    case SAVE_IN_PROGRESS;
+    case SAVE_IN_PROGRESS:
       break;
   }
 }
 
 void StateController::buttonHeldFor_ms(uint16_t time_ms) {
   switch(this->page){
-    case CHANNEL_LIST;
+    case CHANNEL_LIST:
       break;
-    case CHANNEL_EDIT; 
+    case CHANNEL_EDIT:
       break;
-    case SAVE_IN_PROGRESS;
+    case SAVE_IN_PROGRESS:
       break;
   }
 }
@@ -115,7 +115,7 @@ void StateController::buttonLongClicked(void) {
     
     // If we're on the channel list and we somehow see a long press (this shouldn't happen) 
     // we should edit the selected channel if one is selected
-    case CHANNEL_LIST;
+    case CHANNEL_LIST:
       if (this->selectedChannel != NO_CHANNEL_SELECTED) {
         this->page = CHANNEL_EDIT;
       }
@@ -123,7 +123,7 @@ void StateController::buttonLongClicked(void) {
 
     // If we're editing a parameter value and a long press is detected, go back to selecting parameters
     // If we're no editing a parameter value, we should save the channel settings to EEPORM
-    case CHANNEL_EDIT; 
+    case CHANNEL_EDIT:
       if(this->editingParameter) {
         this->editingParameter = false;
       } else {
@@ -133,7 +133,7 @@ void StateController::buttonLongClicked(void) {
       }
       break;
 
-    case SAVE_IN_PROGRESS;
+    case SAVE_IN_PROGRESS:
       break;
   }
 }
@@ -141,14 +141,14 @@ void StateController::buttonLongClicked(void) {
 void StateController::encoderIncremented(void) {
   switch(this->page){
     // If we're on the channel list and the encoder is incremented, select the next channel
-    case CHANNEL_LIST;
+    case CHANNEL_LIST:
       this->_incrementSelectedChannel();
       break;
     
     // If we're on the edit page and the encoder is incremented, check if we're editing a 
     // parameter or selecting which parameter to edit then increment accordingly
-    case CHANNEL_EDIT; 
-      if (this->parameterEditMode) {
+    case CHANNEL_EDIT:
+      if (this->editingParameter) {
         this->_incrementSelectedParameterValue();
       } else {
         this->_incrementSelectedParameter();
@@ -156,7 +156,7 @@ void StateController::encoderIncremented(void) {
       break;
     
     // If we're saving, do nothing
-    case SAVE_IN_PROGRESS;
+    case SAVE_IN_PROGRESS:
       break;
   }
 }
@@ -164,14 +164,14 @@ void StateController::encoderIncremented(void) {
 void StateController::encoderDecremented(void) {
   switch(this->page){
     // If we're on the channel list and the encoder is decremented, select the previous channel
-    case CHANNEL_LIST;
+    case CHANNEL_LIST:
       this->_decrementSelectedChannel();
       break;
 
     // If we're on the edit page and the encoder is incremented, check if we're editing a 
     // parameter or selecting which parameter to edit then increment accordingly
-    case CHANNEL_EDIT; 
-      if (this->parameterEditMode) {
+    case CHANNEL_EDIT:
+      if (this->editingParameter) {
         this->_decrementSelectedParameterValue();
       } else {
         this->_decrementSelectedParameter();
@@ -179,7 +179,7 @@ void StateController::encoderDecremented(void) {
       break;
     
     // If we're saving, do nothing
-    case SAVE_IN_PROGRESS;
+    case SAVE_IN_PROGRESS:
       break;
   }
 }
@@ -191,9 +191,9 @@ void StateController::encoderDecremented(void) {
 // Private methods
 
 // Channel selection
-int8_t StateController::getSelectedChannel(void) {
-  return this->selectedChannel;
-}
+// int8_t StateController::getSelectedChannel(void) {
+  // return this->selectedChannel;
+// }
 
 void StateController::_deselectAllChannels(void) {
   this->selectedChannel = NO_CHANNEL_SELECTED;

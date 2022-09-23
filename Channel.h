@@ -1,7 +1,8 @@
-// #include "PZMIDI8.h"
+#include "PZMIDI8.h"
 // #include "GlobalObjects.h"
 
 #include "ChannelSettings.h"
+#include "StateController.h"
 
 #ifndef CHANNEL_h
 #define CHANNEL_h
@@ -21,17 +22,14 @@
 #define SCALE_LEVEL_TO_METER(level) (level/5)  
 #define METER_DECAY 10 // How many steps the meter should decay in each display frame
 
-// Bitmap labels for the numbers on the channel list
-#include "BitmapLabels.h"
-
 class Channel {
 public:
     Channel(const unsigned char* labelBitmap, ChannelSettings* settings);
 
     // Methods to render the channel on the screen, either as a column in a list of channels
     // or an edit screen of a single channel
-    void drawListView(Adafruit_SSD1306 &display, uint8_t channelIndex, bool isSelected);
-    void drawEdittView(Adafruit_SSD1306 &display, StateController appState);
+    void drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected);
+    void drawEditView(Adafruit_SSD1306* display, StateController* state);
 
     // Manage a channels settings
     ChannelSettings* getSettings(void);
