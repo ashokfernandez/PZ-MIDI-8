@@ -8,8 +8,6 @@ Channel::Channel(const unsigned char* labelBitmap, ChannelSettings* settings) {
   _settings = settings;
 }
 
-
-
 void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected){   
 
     // Parameters for channel label

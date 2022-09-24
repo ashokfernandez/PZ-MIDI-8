@@ -3,14 +3,7 @@
 #ifndef StateController_h
 #define StateController_h
 
-// Todo move these to the hardware scan file
-// Rotary encoder pins
-#define ROTARY_DATA_PIN 3
-#define ROTARY_CLOCK_PIN A3
 
-// Push button switch
-#define ROTARY_PUSH_BUTTON_PIN 2
-#define LONG_PRESS_DURATION_MS 1500
 
 // Timeout if no interactions happen
 #define SELECT_CHANNEL_TIMEOUT_MS 5000
