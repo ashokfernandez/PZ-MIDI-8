@@ -4,78 +4,16 @@
 #include "GlobalObjects.h"
 #include "Utils.h"
 
-
-
-// void buttonClicked(void) { 
-    
-// }
-
-// void buttonLongClicked(void) { 
-//   switch(state->getCurrentState()) {
-//     case CHANNEL_LIST:
-//       state->setCurrentState(CHANNEL_EDIT);
-//       break;
-//     case CHANNEL_EDIT:
-//       state->setCurrentState(CHANNEL_LIST);
-//       break;
-//   }
-// }
-
 StateController::StateController(void){  
   page = CHANNEL_LIST;
   selectedChannel = 0;
   editingParameter = false;
   selectedParameter = 0;
   switchHoldTime_ms = 0;
-  // _encoderPosition = 0;
-  // _selectedChannel = -1;
-  // _encoderLastChanged_ms = 0;
 }
 
+// Public Methods
 
-// void StateController::update(void) {
-    // Get latest values from hardware
-    // encoder.tick();
-    // button.update();
-
-    // If the encoder moved...
-    // int newEncoderPosition = encoder.getPosition();
-    // if (this->_encoderPosition != newEncoderPosition) {
-        // this->_encoderLastChanged_ms = millis();
-        // this->_selectChannel();
-        // this->_encoderPosition = newEncoderPosition;
-    //}
-
-    // If enough time has elaspsed since the last encoder move, deselect the selected channel
-    // if (millis() - this->_encoderLastChanged_ms > SELECT_CHANNEL_TIMEOUT_MS) {
-      // this->_deselectChannel();
-    // }
-// }
-
-// int8_t StateController::getCurrentState(void) {
-  // return this->_currentState;
-// }
-
-
-// void  StateController::setCurrentState(uint8_t state) {
-  // this->_currentState = state;
-// }
-
-
-// void StateController::_selectChannel(void) {
-  // int direction;
-  // direction = (int)encoder.getDirection();
-  // 
-  // if(direction > 0) { 
-    // this->_incrementSelectedChannel(); 
-  // } else if (direction < 0) { 
-    // this->_decrementSelectedChannel(); 
-  // }
-// }
-
-// ------// ------// ------// ------// ------// ------// ------
-
-// If the button is clicked...    
 void StateController::buttonClicked(void) {
   
   switch(this->page){
@@ -191,10 +129,6 @@ void StateController::encoderDecremented(void) {
 // Private methods
 
 // Channel selection
-// int8_t StateController::getSelectedChannel(void) {
-  // return this->selectedChannel;
-// }
-
 void StateController::_deselectAllChannels(void) {
   this->selectedChannel = NO_CHANNEL_SELECTED;
 }
