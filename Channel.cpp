@@ -3,10 +3,10 @@
 #include "StateController.h"
 #include "Utils.h"
 
-Channel::Channel(const unsigned char* labelBitmap, ChannelSettings* settings) {
+Channel::Channel(const unsigned char* labelBitmap, int8_t channelNumber) {
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
   this->_level = 0; // Meter display level
-  this->_settings = settings;
+  this->_settings = new ChannelSettings(channelNumber);
 }
 
 void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected){   

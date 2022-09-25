@@ -1,14 +1,28 @@
 #include "ChannelSettings.h"
 #include "Utils.h"
 
-ChannelSettings::ChannelSettings(int8_t* setting) {
+// pass channel number in instantiation 
+// if first EEPROM cell is 0 write defaults
+// load EEPROM into settings
+// on save, write all values to EEPROM (library will detect if there are any differences)
+
+ChannelSettings::ChannelSettings(int8_t channelNumber) {
   // int8_t setting[] = { note, threshold, peak, attackScan, retriggerDelay };
-  this->setting = setting;
+  // int8_t channelNumber
+  // this->setting = setting;
+  this->_readSettingsFromEEPROM(channelNumber);
   // this->note = note;
   // this->threshold = threshold; //1-100 cant be higher than max, is the min value needed before a hit is registered,  
   // this->setting[PEAK] = peak; // 1-100, 100 means all ADC values over 1000 register at 127 velocity 
   // this->attackScan = attackScan; //1- 10 how long the controller waits to see how hard the pad was hit,  
   // this->retriggerDelay = retriggerDelay; //1-100 ms before another hit can be registered,  
+}
+
+void ChannelSettings::_readSettingsFromEEPROM(int8_t channelNumber) {
+  
+  for (uint8_t i = 0; i < NUM_PARAMETERS; i++) {
+    this->setting[i] = defaultChannelSettings[channelNumber][i];
+  }
 }
 
 void ChannelSettings::incrementParameter(int8_t parameter) {
@@ -50,20 +64,21 @@ void ChannelSettings::_modifyParameter(int8_t amount, int8_t parameter) {
   };
 }
 
+// 
 void  ChannelSettings::_drawNumberWithMs(Adafruit_SSD1306* display, int8_t number) {
   display->setTextSize(2);
-  display->setCursor(EDIT_PARAMETER_BOX_LEFT + 8, EDIT_PARAMETER_BOX_TOP + 5);  
+  display->setCursor(EDIT_PARAMETER_BOX_CURSOR_X, EDIT_PARAMETER_BOX_CURSOR_Y);  
   display->print(number);
   display->println(F("ms"));
 }
 
 void  ChannelSettings::_drawNumber(Adafruit_SSD1306* display, int8_t number) {
   display->setTextSize(2);
-  display->setCursor(EDIT_PARAMETER_BOX_LEFT + 8, EDIT_PARAMETER_BOX_TOP + 5);  
+  display->setCursor(EDIT_PARAMETER_BOX_CURSOR_X, EDIT_PARAMETER_BOX_CURSOR_Y);  
   display->println(number);  
 }
 
-// Handles drawing a single parameter to display when we're in edit mode
+// Handles drawing the selected parameter to the display when we're in edit mode
 void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter) {
   
   // If we're editing a parameter, show a solid filled area with inverted text
@@ -75,15 +90,10 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
     display->drawRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);  
     display->setTextColor(SSD1306_WHITE);
   }
-  
-  Serial.print("PARAM: ");
-  Serial.println(parameter);
 
   switch(parameter) {
-    // Convert the selected note to a MIDI note
+    // Turn the midi note number (0-127) into a note (i.e C#) and an octave number
     case NOTE: {
-      Serial.println("NOTE");
-      // Turn the midi note number (0-127) into a note (i.e C#) and an octave number
       uint8_t octave = (this->setting[NOTE] / NOTES_PER_OCTAVE);
       uint8_t noteLabelIndex = this->setting[NOTE] % NOTES_PER_OCTAVE;          
       char noteLabelBuffer[NOTE_LABEL_MAX_CHARATERS];          
@@ -106,6 +116,7 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
       break;
     }
     
+    // Draw number from 1-100
     case PEAK: {
       this->_drawNumber(display, this->setting[PEAK]);
       break;
@@ -117,6 +128,7 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
       break;
     }
 
+    // Draw number of milliseconds
     case RETRIGGER_DELAY: {
       this->_drawNumberWithMs(display, this->setting[RETRIGGER_DELAY]);  
       break;

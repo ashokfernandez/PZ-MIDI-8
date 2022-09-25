@@ -60,16 +60,14 @@ void StateController::buttonLongClicked(void) {
       }
       break;
 
-    // If we're editing a parameter value and a long press is detected, go back to selecting parameters
-    // If we're no editing a parameter value, we should save the channel settings to EEPORM
+    // If we're editing a parameter value and a long press is detected, stop editing any parameters, 
+    // reset the selected parameter and go back to the channel list
     case CHANNEL_EDIT:
       if(this->editingParameter) {
         this->editingParameter = false;
-      } else {
-        // TODO
-        // IMPLEMENT SAVE LOGIC HERE
-        this->page = CHANNEL_LIST;
-      }
+      } 
+      this->selectedParameter = 0;
+      this->page = CHANNEL_LIST;
       break;
 
     case SAVE_IN_PROGRESS:

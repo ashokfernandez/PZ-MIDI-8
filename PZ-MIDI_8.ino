@@ -14,38 +14,28 @@ EasyButton button(ROTARY_PUSH_BUTTON_PIN);
 StateController* state;
 ViewController* view;
 
-// (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay )
-int8_t channel1Settings[NUM_PARAMETERS] = {35, 10, 100, 10, 30};
-int8_t channel2Settings[NUM_PARAMETERS] = {36, 10, 100, 10, 30};
-int8_t channel3Settings[NUM_PARAMETERS] = {37, 10, 100, 10, 30};
-int8_t channel4Settings[NUM_PARAMETERS] = {38, 10, 100, 10, 30};
-int8_t channel5Settings[NUM_PARAMETERS] = {39, 10, 100, 10, 30};
-int8_t channel6Settings[NUM_PARAMETERS] = {40, 10, 100, 10, 30};
-int8_t channel7Settings[NUM_PARAMETERS] = {41, 10, 100, 10, 30};
-int8_t channel8Settings[NUM_PARAMETERS] = {42, 10, 100, 10, 30};
-
-ChannelSettings settings[] = {
-  ChannelSettings(channel1Settings),
-  ChannelSettings(channel2Settings),
-  ChannelSettings(channel3Settings),
-  ChannelSettings(channel4Settings),
-  ChannelSettings(channel5Settings),
-  ChannelSettings(channel6Settings),
-  ChannelSettings(channel7Settings),
-  ChannelSettings(channel8Settings)
-};
+// ChannelSettings settings[] = {
+//   ChannelSettings(channel1Settings),
+//   ChannelSettings(channel2Settings),
+//   ChannelSettings(channel3Settings),
+//   ChannelSettings(channel4Settings),
+//   ChannelSettings(channel5Settings),
+//   ChannelSettings(channel6Settings),
+//   ChannelSettings(channel7Settings),
+//   ChannelSettings(channel8Settings)
+// };
 
 #include "BitmapLabels.h"
 
 Channel channels[] = {
-  Channel(bitmapLabel_channel1, &settings[0]), 
-  Channel(bitmapLabel_channel2, &settings[1]), 
-  Channel(bitmapLabel_channel3, &settings[2]), 
-  Channel(bitmapLabel_channel4, &settings[3]), 
-  Channel(bitmapLabel_channel5, &settings[4]), 
-  Channel(bitmapLabel_channel6, &settings[5]), 
-  Channel(bitmapLabel_channel7, &settings[6]), 
-  Channel(bitmapLabel_channel8, &settings[7])
+  Channel(bitmapLabel_channel1, 0), 
+  Channel(bitmapLabel_channel2, 1), 
+  Channel(bitmapLabel_channel3, 2), 
+  Channel(bitmapLabel_channel4, 3), 
+  Channel(bitmapLabel_channel5, 4), 
+  Channel(bitmapLabel_channel6, 5), 
+  Channel(bitmapLabel_channel7, 6), 
+  Channel(bitmapLabel_channel8, 7)
 };
 
 // ISR for rotary encoder change
@@ -129,8 +119,6 @@ void setup() {
   button.onPressed(buttonClicked);
   button.onPressedFor(LONG_PRESS_DURATION_MS, buttonLongClicked);
   button.enableInterrupt(buttonISR);
-
-  // channels = 
 
   state = new StateController(channels);
   view = new ViewController(&display, state, channels);

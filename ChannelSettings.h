@@ -6,9 +6,9 @@
   // Make sure all lists of the parameters are in the same order as they're defined here
   // don't forget to include the null byte in the max char count!
   #define NUM_PARAMETERS 5
-  #define PARAMETER_LABEL_MAX_CHARACTERS 10
+  #define PARAMETER_LABEL_MAX_CHARACTERS 12
   enum EDIT_PARAMETER { NOTE, THRESHOLD, PEAK, ATTACK_SCAN, RETRIGGER_DELAY };
-  const char PARAMETER_LABELS[][PARAMETER_LABEL_MAX_CHARACTERS] PROGMEM = { "NOTE     ", "THRESHOLD", "PEAK     ", "SCAN     ", "RETRIGGER"};  // Spaces so each label is 9 chars long, makes it easy draw the background for the selected label
+  const char PARAMETER_LABELS[][PARAMETER_LABEL_MAX_CHARACTERS] PROGMEM = { " NOTE      ", " THRESHOLD ", " PEAK      ", " SCAN      ", " RETRIGGER "};  // Spaces so each label is 11 chars long, makes it easy draw the background for the selected label
 
   // Max min allowed range for each parameter
   #define NOTE_MIN 0
@@ -27,11 +27,12 @@
   #define RETRIGGER_DELAY_MAX 99
 
   // The area where the value of each parameter is displayed for editing
-  #define EDIT_PARAMETER_BOX_LEFT 63
+  #define EDIT_PARAMETER_BOX_LEFT 65
   #define EDIT_PARAMETER_BOX_TOP HEADER_HEIGHT
   #define EDIT_PARAMETER_BOX_WIDTH (SCREEN_WIDTH - EDIT_PARAMETER_BOX_LEFT)
   #define EDIT_PARAMETER_BOX_HEIGHT (SCREEN_HEIGHT - HEADER_HEIGHT)
-
+  #define EDIT_PARAMETER_BOX_CURSOR_X (EDIT_PARAMETER_BOX_LEFT + 8)
+  #define EDIT_PARAMETER_BOX_CURSOR_Y (EDIT_PARAMETER_BOX_TOP + 5)
 
 
   // Constant strings used to display the current midi note, the octave is drawn dynamically
@@ -40,11 +41,24 @@
   #define NOTES_PER_OCTAVE 12
   const char NOTE_LABELS[][NOTE_LABEL_MAX_CHARATERS] PROGMEM = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B" };  // Spaces so each label is 9 chars long, makes it easy draw the background for the selected label
 
+  // (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay )
+  // Default channel settings
+  const int8_t defaultChannelSettings[NUM_CHANNELS][NUM_PARAMETERS] = {
+    {35, 10, 100, 10, 30},
+    {36, 10, 100, 10, 30},
+    {37, 10, 100, 10, 30},
+    {38, 10, 100, 10, 30},
+    {39, 10, 100, 10, 30},
+    {40, 10, 100, 10, 30},
+    {41, 10, 100, 10, 30},
+    {42, 10, 100, 10, 30}
+  };
+
   class ChannelSettings {
     public: 
       // ChannelSettings(int8_t channelNumber);
-      ChannelSettings(int8_t* settings);
-      int8_t* setting;
+      ChannelSettings(int8_t channelNumber);
+      int8_t setting[NUM_PARAMETERS];
       
       // Given an index to a parameter, increment or decrement the value. 
       // Handles clipping to the approrate range
@@ -59,6 +73,7 @@
       void drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter);
         
     private:
+      void _readSettingsFromEEPROM(int8_t channelNumber);
       void _drawNumber(Adafruit_SSD1306* display, int8_t number);
       void _drawNumberWithMs(Adafruit_SSD1306* display, int8_t number);
       void _modifyParameter(int8_t amount, int8_t parameter);
