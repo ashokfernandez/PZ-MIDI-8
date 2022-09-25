@@ -4,15 +4,6 @@
 #ifndef CHANNEL_h
 #define CHANNEL_h
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 32 // OLED display height, in pixels
-
-// The SSD1306 OLED Display used has a top header row that displays in yellow, and 
-// a main section that displays in blue
-#define HEADER_HEIGHT 8 
-#define MAIN_DISPLAY_HEIGHT (SCREEN_HEIGHT-HEADER_HEIGHT) 
-#define CHANNEL_WIDTH (SCREEN_WIDTH/NUM_CHANNELS) // Display width of each channel
-
 // The velocity level can be anything between 0-127
 // There are 24 rows for the meter on the display (32 - 8 header rows = MAIN_DISPLAY_HEIGHT)
 // 127 levels / 24 rows = 5.2 rows per level, round it down to 5
@@ -30,13 +21,6 @@
 #define EDIT_INPUT_METER_HEIGHT (HEADER_HEIGHT - EDIT_INPUT_METER_MARKER_HEIGHT)
 #define EDIT_INPUT_METER_MARKER_TOP (HEADER_HEIGHT - EDIT_INPUT_METER_MARKER_HEIGHT)
 #define EDIT_INPUT_METER_MARKER_BOTTOM (HEADER_HEIGHT - 1)
-
-// The area where the value of each parameter is displayed for editing
-#define EDIT_PARAMETER_BOX_LEFT 63
-#define EDIT_PARAMETER_BOX_TOP HEADER_HEIGHT
-#define EDIT_PARAMETER_BOX_WIDTH (SCREEN_WIDTH - EDIT_PARAMETER_BOX_LEFT)
-#define EDIT_PARAMETER_BOX_HEIGHT (SCREEN_HEIGHT - HEADER_HEIGHT)
-
 
 class Channel {
   public:

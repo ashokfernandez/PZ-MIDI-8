@@ -39,6 +39,15 @@
   #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
   #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 
+  #define SCREEN_WIDTH 128 // OLED display width, in pixels
+  #define SCREEN_HEIGHT 32 // OLED display height, in pixels
+
+  // The SSD1306 OLED Display used has a top header row that displays in yellow, and 
+  // a main section that displays in blue
+  #define HEADER_HEIGHT 8 
+  #define MAIN_DISPLAY_HEIGHT (SCREEN_HEIGHT-HEADER_HEIGHT) 
+  #define CHANNEL_WIDTH (SCREEN_WIDTH/NUM_CHANNELS) // Display width of each channel
+
 #endif 
 
 

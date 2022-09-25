@@ -111,22 +111,13 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
     // Draw the label 
     display->setCursor(0, HEADER_HEIGHT + (i * LINE_HEIGHT));  
     display->print(parameterLabelBuffer);
-    display->print(" ");
   }
   
   /* ------------------------------------------------------------------------
-  // Draw the value of the currently selected parameter
+  // Draw the value of the currently selected parameter, highlighting the display
+  // area if we're editing that parameter
   ---------------------------------------------------------------------------*/
-  if (state->editingParameter) {
-    display->fillRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);      
-    display->setTextColor(SSD1306_BLACK);
-  } else {
-    display->drawRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);  
-    display->setTextColor(SSD1306_WHITE);
-  }
-  
-
-  
+  this->_settings->drawParameter(display, state->selectedParameter, state->editingParameter);
 }
 
 
