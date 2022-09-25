@@ -53,6 +53,10 @@ void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool
 
 void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
   
+  /* ------------------------------------------------------------------------
+  // Draw the input level meter, and markers for threshold and peak
+  ---------------------------------------------------------------------------*/
+
   // Take the threshold and peak values (1-100) and remap them to width of the screen (0-127), accounting for the width of the meter market so we
   // don't try draw half the meter marker off the screen at low and high values
   int8_t thresholdMarkerCenterX = map(this->_settings->setting[THRESHOLD], THRESHOLD_MIN, THRESHOLD_MAX, EDIT_INPUT_METER_MARKER_HALF_WIDTH - 1, SCREEN_WIDTH - 1 - EDIT_INPUT_METER_MARKER_HALF_WIDTH);
@@ -66,14 +70,21 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
   int8_t peakMarkerX1 = peakMarkerCenterX;
   int8_t peakMarkerX2 = peakMarkerCenterX + EDIT_INPUT_METER_MARKER_HALF_WIDTH;
   
+  // Draw the markers
   display->fillTriangle(thresholdMarkerX0, EDIT_INPUT_METER_MARKER_BOTTOM, thresholdMarkerX1, EDIT_INPUT_METER_MARKER_TOP, thresholdMarkerX2, EDIT_INPUT_METER_MARKER_BOTTOM, SSD1306_WHITE);
   display->fillTriangle(peakMarkerX0, EDIT_INPUT_METER_MARKER_BOTTOM, peakMarkerX1, EDIT_INPUT_METER_MARKER_TOP, peakMarkerX2, EDIT_INPUT_METER_MARKER_BOTTOM, SSD1306_WHITE);
+  
+  // Draw the meter
+  // TODO hook this up to the ADC value for the channel
   display->fillRect(EDIT_INPUT_METER_MARKER_HALF_WIDTH, 0, SCREEN_WIDTH, EDIT_INPUT_METER_HEIGHT, SSD1306_WHITE);
   
+  /* ------------------------------------------------------------------------
+  // Draw the list of channel parameters, highlighting which one is selected
+  ---------------------------------------------------------------------------*/
+
   // Draw the list of labels showing what can be edited
   char parameterLabelBuffer[PARAMETER_LABEL_MAX_CHARACTERS];
   display->setTextSize(1);
-  display->setTextColor(SSD1306_WHITE);
 
   // Choose which three labels to display based on the currently selected parameter.
   // The selected parameter should always be in the middle, unless it's the first or last one
@@ -85,18 +96,11 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
     topLabelIndex -= 2;
   }
   
-  Serial.println(topLabelIndex);
-  delay(100);
-  
   for (uint8_t i = 0; i < MAX_LINES_OF_PARAMETERS_ON_DISPLAY; i++) {
     // Parameter labels need to be copied from program memory into a buffer before 
     // printing to the display, otherwise the memory corrupts and you get nothing but spaghetti on screen
     strcpy_P(parameterLabelBuffer, (char*)PARAMETER_LABELS[i + topLabelIndex]);
   
-    // Draw the label 
-    display->setCursor(0, HEADER_HEIGHT + (i * LINE_HEIGHT));  
-
-    // if ()
     // If the parameter is selected, invert the colours
     if (i + topLabelIndex == state->selectedParameter) {
       display->setTextColor(SSD1306_BLACK, SSD1306_WHITE);
@@ -104,11 +108,22 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
       display->setTextColor(SSD1306_WHITE, SSD1306_BLACK);
     }
     
+    // Draw the label 
+    display->setCursor(0, HEADER_HEIGHT + (i * LINE_HEIGHT));  
     display->print(parameterLabelBuffer);
     display->print(" ");
   }
   
+  /* ------------------------------------------------------------------------
+  // Draw the value of the currently selected parameter
+  ---------------------------------------------------------------------------*/
+  if (state->editingParameter) {
+    display->fillRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);      
+  } else {
+    display->drawRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);  
+  }
   
+
   
 }
 
