@@ -1,6 +1,0 @@
-{
-    "board": "arduino:avr:uno",
-    "programmer": "arduino:avrispmkii",
-    "port": "/dev/tty.usbmodem14141301",
-    "sketch": "PZ-MIDI_8.ino"
-}
