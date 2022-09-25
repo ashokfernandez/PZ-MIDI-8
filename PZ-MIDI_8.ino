@@ -14,16 +14,15 @@ EasyButton button(ROTARY_PUSH_BUTTON_PIN);
 StateController* state;
 ViewController* view;
 
-// (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay ) 
-
-int8_t channel1Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel2Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel3Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel4Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel5Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel6Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel7Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
-int8_t channel8Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+// (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay )
+int8_t channel1Settings[NUM_PARAMETERS] = {35, 10, 100, 10, 30};
+int8_t channel2Settings[NUM_PARAMETERS] = {36, 10, 100, 10, 30};
+int8_t channel3Settings[NUM_PARAMETERS] = {37, 10, 100, 10, 30};
+int8_t channel4Settings[NUM_PARAMETERS] = {38, 10, 100, 10, 30};
+int8_t channel5Settings[NUM_PARAMETERS] = {39, 10, 100, 10, 30};
+int8_t channel6Settings[NUM_PARAMETERS] = {40, 10, 100, 10, 30};
+int8_t channel7Settings[NUM_PARAMETERS] = {41, 10, 100, 10, 30};
+int8_t channel8Settings[NUM_PARAMETERS] = {42, 10, 100, 10, 30};
 
 ChannelSettings settings[] = {
   ChannelSettings(channel1Settings),
