@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include "PZMIDI8.h"
 
 #ifndef CHANNEL_SETTINGS_H
 #define CHANNEL_SETTINGS_H

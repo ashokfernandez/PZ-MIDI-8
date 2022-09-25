@@ -45,4 +45,29 @@ void ChannelSettings::_modifyParameter(int8_t amount, int8_t parameter) {
   };
 }
 
+void ChannelSettings::_drawParameter(Adafruit_SSD1306* display, int8_t parameter, int8_t foregroundColour) {
+  switch(parameter) {
+      case NOTE:
+          this->setting[NOTE] = clipValue(this->setting[NOTE] + amount, NOTE_MIN, NOTE_MAX, CLIP_CLAMP_VALUE);
+          break;
+      
+      // Clip threshold to 1, up to the current peak value
+      case THRESHOLD:
+          this->setting[THRESHOLD] = clipValue(this->setting[THRESHOLD] + amount, THRESHOLD_MIN, this->setting[PEAK], CLIP_CLAMP_VALUE);
+          break;
+      
+      // Clip peak from current threshold value up to 100
+      case PEAK:
+          this->setting[PEAK] = clipValue(this->setting[PEAK] + amount, this->setting[THRESHOLD], PEAK_MAX, CLIP_CLAMP_VALUE);
+          break;
+      
+      case ATTACK_SCAN:
+          this->setting[ATTACK_SCAN] = clipValue(this->setting[ATTACK_SCAN] + amount, ATTACK_SCAN_MIN, ATTACK_SCAN_MAX, CLIP_CLAMP_VALUE);
+          break;
+      
+      case RETRIGGER_DELAY:
+          this->setting[RETRIGGER_DELAY] = clipValue(this->setting[RETRIGGER_DELAY] + amount, RETRIGGER_DELAY_MIN, RETRIGGER_DELAY_MAX, CLIP_CLAMP_VALUE);
+          break;    
+  };
+}
 

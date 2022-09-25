@@ -119,8 +119,10 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
   ---------------------------------------------------------------------------*/
   if (state->editingParameter) {
     display->fillRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);      
+    display->setTextColor(SSD1306_BLACK);
   } else {
     display->drawRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);  
+    display->setTextColor(SSD1306_WHITE);
   }
   
 
