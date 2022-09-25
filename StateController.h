@@ -1,17 +1,13 @@
- #include "PZMIDI8.h"
+#include "PZMIDI8.h"
 
 #ifndef StateController_h
 #define StateController_h
 
-
-
 // Timeout if no interactions happen
 #define SELECT_CHANNEL_TIMEOUT_MS 5000
 
-
 // Different states the application can be in 
 enum PAGE { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
-
 
 // Value to set the selected channel variable to if no channel is selected
 #define NO_CHANNEL_SELECTED -10
@@ -37,13 +33,14 @@ enum PAGE { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
 class StateController {
     public:
         // Public interface only contains callbacks for external events, and a getter
-        StateController();
+        StateController(Channel* channels);
 
         // todo create a function which updates the state of all inuputs, that's what this used to be for
         // void update(void);
 
         // int8_t getState(void);
         // Current state
+        Channel* channels;
         int8_t page;
         int8_t selectedChannel;
         int8_t selectedParameter;

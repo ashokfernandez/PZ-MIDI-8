@@ -1,6 +1,6 @@
-#include <Arduino.h>
+#include "Utils.h"
 
-int8_t clipValue(int8_t value, int8_t min, int8_t max, bool wrap) {
+int8_t clipValue(int8_t value, int8_t min, int8_t max, bool wrap = false) {
     // If we're wrapping around; set values below min to max, set values above max to min
     if (wrap) {
         if (value > max) { 
@@ -10,11 +10,7 @@ int8_t clipValue(int8_t value, int8_t min, int8_t max, bool wrap) {
         }
     } else {
     // Clip values above max to max, values below min to min
-        if (value > max) { 
-            value = max; 
-        } else if (value < min) {
-            value = min; 
-        }
+      value = constrain(value, min, max);
     }
 
     return value;

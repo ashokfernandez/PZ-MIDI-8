@@ -5,7 +5,6 @@
 #include "StateController.h"
 #include "ViewController.h"
 
-
 // Setup hardware objects
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
@@ -15,17 +14,39 @@ EasyButton button(ROTARY_PUSH_BUTTON_PIN);
 StateController* state;
 ViewController* view;
 
+// (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay ) 
+
+int8_t channel1Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel2Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel3Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel4Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel5Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel6Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel7Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+int8_t channel8Settings[NUM_PARAMETERS] = {63, 5, 100, 10, 50};
+
+ChannelSettings settings[] = {
+  ChannelSettings(channel1Settings),
+  ChannelSettings(channel2Settings),
+  ChannelSettings(channel3Settings),
+  ChannelSettings(channel4Settings),
+  ChannelSettings(channel5Settings),
+  ChannelSettings(channel6Settings),
+  ChannelSettings(channel7Settings),
+  ChannelSettings(channel8Settings)
+};
+
 #include "BitmapLabels.h"
 
 Channel channels[] = {
-  Channel(bitmapLabel_channel1, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel2, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel3, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel4, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel5, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel6, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel7, new ChannelSettings(100, 5, 10, 30, 63)), 
-  Channel(bitmapLabel_channel8, new ChannelSettings(100, 5, 10, 30, 63))
+  Channel(bitmapLabel_channel1, &settings[0]), 
+  Channel(bitmapLabel_channel2, &settings[1]), 
+  Channel(bitmapLabel_channel3, &settings[2]), 
+  Channel(bitmapLabel_channel4, &settings[3]), 
+  Channel(bitmapLabel_channel5, &settings[4]), 
+  Channel(bitmapLabel_channel6, &settings[5]), 
+  Channel(bitmapLabel_channel7, &settings[6]), 
+  Channel(bitmapLabel_channel8, &settings[7])
 };
 
 // ISR for rotary encoder change
@@ -77,7 +98,19 @@ Task updateDisplay(33 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskSched
 Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
 
 void setup() {
+  
   Serial.begin(9600);
+  // int8_t chanSetTest[] = {63, 5, 100, 10, 50};
+  // Serial.println(chanSetTest[0]);
+  // Serial.println(chanSetTest[1]);
+  // Serial.println(chanSetTest[2]);
+  
+  // ChannelSettings settingtest = ChannelSettings(chanSetTest);
+  // Serial.println(settingtest.setting[NOTE]);
+  // Serial.println(settingtest.peak);
+  // Serial.println(settingtest.threshold);
+  // Serial.println(settingtest.attackScan);
+  // Serial.println(settingtest.retriggerDelay);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -98,8 +131,10 @@ void setup() {
   button.onPressedFor(LONG_PRESS_DURATION_MS, buttonLongClicked);
   button.enableInterrupt(buttonISR);
 
-  state = new StateController();
-  view = new ViewController(&display, state);
+  // channels = 
+
+  state = new StateController(channels);
+  view = new ViewController(&display, state, channels);
 }
 
 void loop() {

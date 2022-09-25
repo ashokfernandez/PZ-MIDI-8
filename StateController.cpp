@@ -1,21 +1,22 @@
 // Handles external inputs and what they do to the state of the application. 
 // call update to process a round of inputs and state updates
 #include "StateController.h"
-#include "GlobalObjects.h"
+#include "Channel.h"
+#include "ChannelSettings.h"
 #include "Utils.h"
 
-StateController::StateController(void){  
-  page = CHANNEL_LIST;
-  selectedChannel = 0;
-  editingParameter = false;
-  selectedParameter = 0;
-  switchHoldTime_ms = 0;
+StateController::StateController(Channel* channels){  
+  this->channels = channels;
+  this->page = CHANNEL_EDIT;
+  this->selectedChannel = 0;
+  this->editingParameter = false;
+  this->selectedParameter = 0;
+  this->switchHoldTime_ms = 0;
 }
 
 // Public Methods
 
 void StateController::buttonClicked(void) {
-  
   switch(this->page){
   
     // If we're on the channel list and a channel is selected, clicking will open the settings
@@ -51,7 +52,7 @@ void StateController::buttonHeldFor_ms(uint16_t time_ms) {
 void StateController::buttonLongClicked(void) {
   switch(this->page){
     
-    // If we're on the channel list and we somehow see a long press (this shouldn't happen) 
+    // If we're on the channel list and we see a long press
     // we should edit the selected channel if one is selected
     case CHANNEL_LIST:
       if (this->selectedChannel != NO_CHANNEL_SELECTED) {
@@ -144,11 +145,11 @@ void StateController::_decrementSelectedChannel(void) {
 
 // Parameter selection
 void StateController::_incrementSelectedParameter(void) {
-  this->selectedParameter = clipValue(this->selectedParameter+1, 0, NUM_PARAMETERS - 1, CLIP_WRAP_AROUND);
+  this->selectedParameter = clipValue(this->selectedParameter+1, 0, NUM_PARAMETERS - 1);
 }
 
 void StateController::_decrementSelectedParameter(void) {
-  this->selectedParameter = clipValue(this->selectedParameter-1, 0, NUM_PARAMETERS - 1, CLIP_WRAP_AROUND);
+  this->selectedParameter = clipValue(this->selectedParameter-1, 0, NUM_PARAMETERS - 1);
 }
 
 void StateController::_deselectAllParameters(void) {
@@ -158,11 +159,11 @@ void StateController::_deselectAllParameters(void) {
 
 // Parameter value change
 void StateController::_incrementSelectedParameterValue(void) {
-  channels[this->selectedChannel].incrementParameter(this->selectedParameter);
+  this->channels[this->selectedChannel].incrementParameter(this->selectedParameter);
 }
 
 void StateController::_decrementSelectedParameterValue(void) {
-  channels[this->selectedChannel].decrementParameter(this->selectedParameter);
+  this->channels[this->selectedChannel].decrementParameter(this->selectedParameter);
 }
 
 
