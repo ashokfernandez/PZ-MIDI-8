@@ -134,16 +134,13 @@ ChannelSettings* Channel::getSettings(void){
   return this->_settings;
 }
 
+void Channel::saveSettings(void) {
+  this->_settings->save();
+}
+
 
 int8_t Channel::_getMeterHeight(void){
-  // int8_t meterHeight = ;
-
-  // Clip the meter height in case it overshoots
-  // if(meterHeight > MAIN_DISPLAY_HEIGHT) {
-    // meterHeight = MAIN_DISPLAY_HEIGHT;
-  // }
-  
-  return clipValue(SCALE_LEVEL_TO_METER(getLevel()), 0, MAIN_DISPLAY_HEIGHT);//, CLIP_CLAMP_VALUE) ;
+  return clipValue(SCALE_LEVEL_TO_METER(getLevel()), 0, MAIN_DISPLAY_HEIGHT);
 }
 
 void Channel::incrementParameter(int8_t parameter) {

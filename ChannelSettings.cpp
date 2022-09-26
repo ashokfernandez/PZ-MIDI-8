@@ -10,43 +10,45 @@ ChannelSettings::ChannelSettings(int8_t channelNumber) {
   // int8_t setting[] = { note, threshold, peak, attackScan, retriggerDelay };
   // int8_t channelNumber
   // this->setting = setting;
-  
-  this->_readSettingsFromEEPROM(channelNumber);
-  // this->note = note;
-  // this->threshold = threshold; //1-100 cant be higher than max, is the min value needed before a hit is registered,  
-  // this->setting[PEAK] = peak; // 1-100, 100 means all ADC values over 1000 register at 127 velocity 
-  // this->attackScan = attackScan; //1- 10 how long the controller waits to see how hard the pad was hit,  
-  // this->retriggerDelay = retriggerDelay; //1-100 ms before another hit can be registered,  
+  this->_channelNumber = channelNumber;
+  this->_eepromStartAddress = channelNumber * NUM_PARAMETERS;
+  this->_initSettingsFromEEPROM();
 }
 
 // Settings are stored in EEPROM, using the channel number to calculate the address
 // Each channel requires NUM_PARAMETER (6) EEPROM cells to store all the parameters
-void ChannelSettings::_readSettingsFromEEPROM(int8_t channelNumber) {
-  uint8_t eepromStartAddress = channelNumber * NUM_PARAMETERS;
-  bool eepromIsEmpty = false;
+void ChannelSettings::_initSettingsFromEEPROM(void) {
+  bool eepromIsEmpty = true;
 
-  for(uint8_t i = eepromStartAddress; i < EEPROM_IS_EMPTY_CHECK; i++) {
-    eepromIsEmpty = eepromIsEmpty && (EEPROM.read(i) == EEPROM_EMPTY_VALUE);
+  // Check if the first 3 bytes of the channels EEPROM space are 0xFF, if they
+  // are we'll assume the channel is empty
+  for(uint8_t i = 0; i < EEPROM_IS_EMPTY_CHECK; i++) {
+    eepromIsEmpty = eepromIsEmpty && (EEPROM.read(this->_eepromStartAddress + i) == EEPROM_EMPTY_VALUE);
   }
 
-  Serial.println(eepromIsEmpty);
+  // If a channel has settings in EEPROM, load these - otherwise write the default 
+  // settings from ChannelSettings.h to EEPROM. should only happen once when the code is first run
+  if (!eepromIsEmpty) {
+    // Load the settings from EEPROM
+    for (uint8_t i = 0; i < NUM_PARAMETERS; i++) {
+      this->setting[i] = EEPROM.read(this->_eepromStartAddress + i);
+    }    
+  } else {
+    // Write the default values to the object and save them to EEPROM for next time
+    for (uint8_t i = 0; i < NUM_PARAMETERS; i++) {
+      this->setting[i] = defaultChannelSettings[this->_channelNumber][i];
+      EEPROM.put(this->_eepromStartAddress + i, this->setting[i]);
+    }
+  }
+}
 
+void ChannelSettings::save(void){   
+  // The EEPROM library's update will only actually write if something changed, saving 3.3ms of write time
+  // and preserving the ~100,000 write limit of the EEPROM on the chip
   for (uint8_t i = 0; i < NUM_PARAMETERS; i++) {
-    this->setting[i] = defaultChannelSettings[channelNumber][i];
+    EEPROM.update(this->_eepromStartAddress + i, this->setting[i]);
   }
 }
-
-
-void loadSettingsFromEEPROM(void){ 
-
-}
-
-void saveSettingsToEEPROM(void){ 
-
-}
-
-
-
 
 void ChannelSettings::incrementParameter(int8_t parameter) {
   this->_modifyParameter(1, parameter);

@@ -61,12 +61,13 @@ void StateController::buttonLongClicked(void) {
       break;
 
     // If we're editing a parameter value and a long press is detected, stop editing any parameters, 
-    // reset the selected parameter and go back to the channel list
+    // reset the selected parameter, save any changes and go back to the channel list
     case CHANNEL_EDIT:
       if(this->editingParameter) {
         this->editingParameter = false;
       } 
       this->selectedParameter = 0;
+      this->channels[this->selectedChannel].saveSettings();
       this->page = CHANNEL_LIST;
       break;
 

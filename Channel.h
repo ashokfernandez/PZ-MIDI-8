@@ -33,7 +33,6 @@ class Channel {
 
       // Manage a channels settings
       ChannelSettings* getSettings(void);
-      void loadSettings(void); // todo, load settings to EEPROM
       void saveSettings(void); // todo, save settings to EEPROM
 
       // Takes an enum of a parameter and changes it

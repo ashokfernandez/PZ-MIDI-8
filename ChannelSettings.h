@@ -74,14 +74,15 @@
       void decrementParameter(int8_t parameter);
 
       // Load and save settings to EEPROM
-      void loadSettingsFromEEPROM(void);
-      void saveSettingsToEEPROM(void);
+      void save(void);
 
       // Handles drawing a single parameter to display when we're in edit mode
       void drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter);
         
     private:
-      void _readSettingsFromEEPROM(int8_t channelNumber);
+      int8_t _channelNumber;
+      int8_t _eepromStartAddress;
+      void _initSettingsFromEEPROM(void);
       void _drawNumber(Adafruit_SSD1306* display, int8_t number);
       void _drawNumberWithMs(Adafruit_SSD1306* display, int8_t number);
       void _modifyParameter(int8_t amount, int8_t parameter);
