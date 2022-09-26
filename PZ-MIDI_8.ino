@@ -88,7 +88,7 @@ Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskSch
 
 void setup() {
   
-  Serial.begin(9600);
+  // Serial.begin(9600);
   // int8_t chanSetTest[] = {63, 5, 100, 10, 50};
   // Serial.println(chanSetTest[0]);
   // Serial.println(chanSetTest[1]);

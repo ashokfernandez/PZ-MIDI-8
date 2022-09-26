@@ -16,7 +16,7 @@
 
   #define PEAK_MIN 1
   #define PEAK_MAX 100
-  
+
   #define THRESHOLD_MIN 1
   #define THRESHOLD_MAX 100  
 
@@ -36,6 +36,11 @@
   #define EDIT_PARAMETER_BOX_HEIGHT (SCREEN_HEIGHT - HEADER_HEIGHT)
   #define EDIT_PARAMETER_BOX_CURSOR_X (EDIT_PARAMETER_BOX_LEFT + 8)
   #define EDIT_PARAMETER_BOX_CURSOR_Y (EDIT_PARAMETER_BOX_TOP + 5)
+
+  // Number of EEPROM cells that have to be set to 255 for the channels settings to be considered 
+  // empty. If the EEPROM is empty for the channel, the defaul settings will be written there
+  #define EEPROM_IS_EMPTY_CHECK 3
+  #define EEPROM_EMPTY_VALUE 0xFF
 
 
   // Constant strings used to display the current midi note, the octave is drawn dynamically

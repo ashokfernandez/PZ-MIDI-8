@@ -10,6 +10,7 @@ ChannelSettings::ChannelSettings(int8_t channelNumber) {
   // int8_t setting[] = { note, threshold, peak, attackScan, retriggerDelay };
   // int8_t channelNumber
   // this->setting = setting;
+  
   this->_readSettingsFromEEPROM(channelNumber);
   // this->note = note;
   // this->threshold = threshold; //1-100 cant be higher than max, is the min value needed before a hit is registered,  
@@ -18,8 +19,18 @@ ChannelSettings::ChannelSettings(int8_t channelNumber) {
   // this->retriggerDelay = retriggerDelay; //1-100 ms before another hit can be registered,  
 }
 
+// Settings are stored in EEPROM, using the channel number to calculate the address
+// Each channel requires NUM_PARAMETER (6) EEPROM cells to store all the parameters
 void ChannelSettings::_readSettingsFromEEPROM(int8_t channelNumber) {
-  
+  uint8_t eepromStartAddress = channelNumber * NUM_PARAMETERS;
+  bool eepromIsEmpty = false;
+
+  for(uint8_t i = eepromStartAddress; i < EEPROM_IS_EMPTY_CHECK; i++) {
+    eepromIsEmpty = eepromIsEmpty && (EEPROM.read(i) == EEPROM_EMPTY_VALUE);
+  }
+
+  Serial.println(eepromIsEmpty);
+
   for (uint8_t i = 0; i < NUM_PARAMETERS; i++) {
     this->setting[i] = defaultChannelSettings[channelNumber][i];
   }
