@@ -5,26 +5,29 @@
 
   // Make sure all lists of the parameters are in the same order as they're defined here
   // don't forget to include the null byte in the max char count!
-  #define NUM_PARAMETERS 5
+  #define NUM_PARAMETERS 6
   #define PARAMETER_LABEL_MAX_CHARACTERS 12
-  enum EDIT_PARAMETER { NOTE, THRESHOLD, PEAK, ATTACK_SCAN, RETRIGGER_DELAY };
-  const char PARAMETER_LABELS[][PARAMETER_LABEL_MAX_CHARACTERS] PROGMEM = { " NOTE      ", " THRESHOLD ", " PEAK      ", " SCAN      ", " RETRIGGER "};  // Spaces so each label is 11 chars long, makes it easy draw the background for the selected label
+  enum EDIT_PARAMETER { NOTE, PEAK, THRESHOLD, CURVE, SCAN, RETRIGGER };
+  const char PARAMETER_LABELS[][PARAMETER_LABEL_MAX_CHARACTERS] PROGMEM = { " NOTE      ",  " PEAK      ", " THRESHOLD ", " CURVE     ", " SCAN      ", " RETRIGGER "};  // Spaces so each label is 11 chars long, makes it easy draw the background for the selected label
 
   // Max min allowed range for each parameter
   #define NOTE_MIN 0
   #define NOTE_MAX 127
 
-  #define THRESHOLD_MIN 1
-  #define THRESHOLD_MAX 100
-
   #define PEAK_MIN 1
   #define PEAK_MAX 100
+  
+  #define THRESHOLD_MIN 1
+  #define THRESHOLD_MAX 100  
 
-  #define ATTACK_SCAN_MIN 1
-  #define ATTACK_SCAN_MAX 10
+  #define CURVE_MIN 0
+  #define CURVE_MAX 4
 
-  #define RETRIGGER_DELAY_MIN 1
-  #define RETRIGGER_DELAY_MAX 99
+  #define SCAN_MIN 1
+  #define SCAN_MAX 10
+
+  #define RETRIGGER_MIN 1
+  #define RETRIGGER_MAX 99
 
   // The area where the value of each parameter is displayed for editing
   #define EDIT_PARAMETER_BOX_LEFT 65
@@ -41,17 +44,17 @@
   #define NOTES_PER_OCTAVE 12
   const char NOTE_LABELS[][NOTE_LABEL_MAX_CHARATERS] PROGMEM = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B" };  // Spaces so each label is 9 chars long, makes it easy draw the background for the selected label
 
-  // (int8_t note, int8_t threshold, int8_t peak, int8_t attackScan, int8_t retriggerDelay )
+  // (int8_t note, int8_t peak, int8_t threshold, int8_t attackScan, int8_t retriggerDelay )
   // Default channel settings
   const int8_t defaultChannelSettings[NUM_CHANNELS][NUM_PARAMETERS] = {
-    {35, 10, 100, 10, 30},
-    {36, 10, 100, 10, 30},
-    {37, 10, 100, 10, 30},
-    {38, 10, 100, 10, 30},
-    {39, 10, 100, 10, 30},
-    {40, 10, 100, 10, 30},
-    {41, 10, 100, 10, 30},
-    {42, 10, 100, 10, 30}
+    {35, 100, 10, 1, 10, 30},
+    {36, 100, 10, 1, 10, 30},
+    {37, 100, 10, 1, 10, 30},
+    {38, 100, 10, 1, 10, 30},
+    {39, 100, 10, 1, 10, 30},
+    {40, 100, 10, 1, 10, 30},
+    {41, 100, 10, 1, 10, 30},
+    {42, 100, 10, 1, 10, 30}
   };
 
   class ChannelSettings {
@@ -66,8 +69,8 @@
       void decrementParameter(int8_t parameter);
 
       // Load and save settings to EEPROM
-      // void loadSettingsFromEEPROM(void);
-      // void saveSettingsToEEPROM(void);
+      void loadSettingsFromEEPROM(void);
+      void saveSettingsToEEPROM(void);
 
       // Handles drawing a single parameter to display when we're in edit mode
       void drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter);

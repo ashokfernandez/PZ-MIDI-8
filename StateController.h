@@ -17,8 +17,8 @@ enum PAGE { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
 
 // PAD[0] = sensitivity = MAX
 // PAD[1] = threshold = THRESHOLD
-// PAD[2] = scan_time = ATTACK_SCAN
-// PAD[3] = mask_time = RETRIGGER_DELAY
+// PAD[2] = scan_time = SCAN
+// PAD[3] = mask_time = RETRIGGER
 // PAD[4] = note = NOTE 
 // #define MIDI_CHANNEL 0
 

@@ -25,6 +25,18 @@ void ChannelSettings::_readSettingsFromEEPROM(int8_t channelNumber) {
   }
 }
 
+
+void loadSettingsFromEEPROM(void){ 
+
+}
+
+void saveSettingsToEEPROM(void){ 
+
+}
+
+
+
+
 void ChannelSettings::incrementParameter(int8_t parameter) {
   this->_modifyParameter(1, parameter);
 }
@@ -36,29 +48,36 @@ void ChannelSettings::decrementParameter(int8_t parameter) {
 void ChannelSettings::_modifyParameter(int8_t amount, int8_t parameter) {
   switch(parameter) {
       case NOTE: { 
-          this->setting[NOTE] = clipValue(this->setting[NOTE] + amount, NOTE_MIN, NOTE_MAX, CLIP_CLAMP_VALUE);
-          break;
-      }
-      
-      // Clip threshold to 1, up to the current peak value
-      case THRESHOLD: {
-          this->setting[THRESHOLD] = clipValue(this->setting[THRESHOLD] + amount, THRESHOLD_MIN, this->setting[PEAK], CLIP_CLAMP_VALUE);
+          this->setting[NOTE] = clipValue(this->setting[NOTE] + amount, NOTE_MIN, NOTE_MAX);
           break;
       }
       
       // Clip peak from current threshold value up to 100
       case PEAK: {
-          this->setting[PEAK] = clipValue(this->setting[PEAK] + amount, this->setting[THRESHOLD], PEAK_MAX, CLIP_CLAMP_VALUE);
+          this->setting[PEAK] = clipValue(this->setting[PEAK] + amount, this->setting[THRESHOLD], PEAK_MAX);
           break;
       }
       
-      case ATTACK_SCAN: {
-          this->setting[ATTACK_SCAN] = clipValue(this->setting[ATTACK_SCAN] + amount, ATTACK_SCAN_MIN, ATTACK_SCAN_MAX, CLIP_CLAMP_VALUE);
+      
+      // Clip threshold to 1, up to the current peak value
+      case THRESHOLD: {
+          this->setting[THRESHOLD] = clipValue(this->setting[THRESHOLD] + amount, THRESHOLD_MIN, this->setting[PEAK]);
+          break;
+      }
+
+      // Clip peak from current threshold value up to 100
+      case CURVE: {
+          this->setting[CURVE] = clipValue(this->setting[CURVE] + amount, CURVE_MIN, CURVE_MAX);
           break;
       }
       
-      case RETRIGGER_DELAY: {
-          this->setting[RETRIGGER_DELAY] = clipValue(this->setting[RETRIGGER_DELAY] + amount, RETRIGGER_DELAY_MIN, RETRIGGER_DELAY_MAX, CLIP_CLAMP_VALUE);
+      case SCAN: {
+          this->setting[SCAN] = clipValue(this->setting[SCAN] + amount, SCAN_MIN, SCAN_MAX);
+          break;
+      }
+      
+      case RETRIGGER: {
+          this->setting[RETRIGGER] = clipValue(this->setting[RETRIGGER] + amount, RETRIGGER_MIN, RETRIGGER_MAX);
           break;
       }    
   };
@@ -109,28 +128,36 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
       display->print(octave);
       break;
     }
-    
-    // Draw number from 1-100
-    case THRESHOLD: {
-      this->_drawNumber(display, this->setting[THRESHOLD]);
-      break;
-    }
-    
+
     // Draw number from 1-100
     case PEAK: {
       this->_drawNumber(display, this->setting[PEAK]);
       break;
     }
 
+    
+    // Draw number from 1-100
+    case THRESHOLD: {
+      this->_drawNumber(display, this->setting[THRESHOLD]);
+      break;
+    }
+
+    // TODO: Draw bitmap of each curve profile to display
+    case CURVE: {
+      this->_drawNumber(display, this->setting[CURVE]);
+      break;
+    }
+    
+    
     // Draw number of milliseconds
-    case ATTACK_SCAN: {
-      this->_drawNumberWithMs(display, this->setting[ATTACK_SCAN]);
+    case SCAN: {
+      this->_drawNumberWithMs(display, this->setting[SCAN]);
       break;
     }
 
     // Draw number of milliseconds
-    case RETRIGGER_DELAY: {
-      this->_drawNumberWithMs(display, this->setting[RETRIGGER_DELAY]);  
+    case RETRIGGER: {
+      this->_drawNumberWithMs(display, this->setting[RETRIGGER]);  
       break;
     }
           
