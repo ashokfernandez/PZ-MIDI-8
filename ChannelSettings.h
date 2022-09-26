@@ -85,6 +85,7 @@
       void _initSettingsFromEEPROM(void);
       void _drawNumber(Adafruit_SSD1306* display, int8_t number);
       void _drawNumberWithMs(Adafruit_SSD1306* display, int8_t number);
+      void _drawCurve(Adafruit_SSD1306* display, int8_t curve);
       void _modifyParameter(int8_t amount, int8_t parameter);
   };
 

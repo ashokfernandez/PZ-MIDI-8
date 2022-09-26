@@ -110,6 +110,13 @@ void  ChannelSettings::_drawNumber(Adafruit_SSD1306* display, int8_t number) {
   display->println(number);  
 }
 
+void  ChannelSettings::_drawCurve(Adafruit_SSD1306* display, int8_t curve) {
+  display->setTextSize(1);
+  display->setCursor(EDIT_PARAMETER_BOX_CURSOR_X, EDIT_PARAMETER_BOX_CURSOR_Y);  
+  display->println(curve);  
+  
+}
+
 // Handles drawing the selected parameter to the display when we're in edit mode
 void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter) {
   
@@ -157,7 +164,7 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
 
     // TODO: Draw bitmap of each curve profile to display
     case CURVE: {
-      this->_drawNumber(display, this->setting[CURVE]);
+      this->_drawCurve(display, this->setting[CURVE]);
       break;
     }
     
