@@ -28,7 +28,7 @@ class Channel {
 
       // Methods to render the channel on the screen, either as a column in a list of channels
       // or an edit screen of a single channel
-      void drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected);
+      void drawListView(Adafruit_SSD1306* display, StateController* state);
       void drawEditView(Adafruit_SSD1306* display, StateController* state);
 
       // Manage a channels settings
@@ -46,6 +46,7 @@ class Channel {
 
 
   private:
+      int8_t _channelNumber;
       ChannelSettings* _settings;
       const unsigned char* _labelBitmap;
       int8_t _level;

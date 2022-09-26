@@ -5,14 +5,15 @@
 
 Channel::Channel(const unsigned char* labelBitmap, int8_t channelNumber) {
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
+  this->_channelNumber = channelNumber;
   this->_level = 0; // Meter display level
   this->_settings = new ChannelSettings(channelNumber);
 }
 
-void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool isSelected){   
+void Channel::drawListView(Adafruit_SSD1306* display, StateController* state){   
 
     // Parameters for channel label
-    uint8_t xOffset = channelNumber * CHANNEL_WIDTH;
+    uint8_t xOffset = this->_channelNumber * CHANNEL_WIDTH;
     uint8_t width = CHANNEL_WIDTH;
     uint8_t yOffset = 0;
 
@@ -23,6 +24,7 @@ void Channel::drawListView(Adafruit_SSD1306* display, int8_t channelNumber, bool
     // Colours
     uint8_t background = SSD1306_BLACK;
     uint8_t foreground = SSD1306_WHITE;
+    bool isSelected = (this->_channelNumber == state->selectedChannel);
 
     // Invert the colours if the channel is currently selected
     if(isSelected){

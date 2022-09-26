@@ -36,7 +36,7 @@ void ViewController::_drawChannelList(void) {
   // Draw all the channels
   for(uint8_t i=0; i<NUM_CHANNELS; i++){
     isSelected = (i == this->_state->selectedChannel) ? true : false;
-    this->_channels[i].drawListView(this->_display, i, isSelected);
+    this->_channels[i].drawListView(this->_display, this->_state);
   }  
 }
 

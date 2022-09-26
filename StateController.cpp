@@ -7,7 +7,7 @@
 
 StateController::StateController(Channel* channels){  
   this->channels = channels;
-  this->page = CHANNEL_EDIT;
+  this->page = CHANNEL_LIST;
   this->selectedChannel = 0;
   this->editingParameter = false;
   this->selectedParameter = 0;
