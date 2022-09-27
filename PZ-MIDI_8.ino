@@ -7,24 +7,27 @@
 
 #include "Bitmaps/ChannelLabels.h"
 
+// Allocate key objects to the heap to save dynamic memory
+
 // Setup hardware objects
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
 
-// Allocate key objects to the heap to save dynamic memory
+// Setup software objects
 Channel channels[] = {
-  Channel(bitmapLabel_channel1, 0), 
-  Channel(bitmapLabel_channel2, 1), 
-  Channel(bitmapLabel_channel3, 2), 
-  Channel(bitmapLabel_channel4, 3), 
-  Channel(bitmapLabel_channel5, 4), 
-  Channel(bitmapLabel_channel6, 5), 
-  Channel(bitmapLabel_channel7, 6), 
-  Channel(bitmapLabel_channel8, 7)
+  Channel(channelLabelBitmap_channel1, 0), 
+  Channel(channelLabelBitmap_channel2, 1), 
+  Channel(channelLabelBitmap_channel3, 2), 
+  Channel(channelLabelBitmap_channel4, 3), 
+  Channel(channelLabelBitmap_channel5, 4), 
+  Channel(channelLabelBitmap_channel6, 5), 
+  Channel(channelLabelBitmap_channel7, 6), 
+  Channel(channelLabelBitmap_channel8, 7)
 };
 StateController* state = new StateController(channels);
 ViewController* view = new ViewController(&display, state, channels);
+
 
 // ISR for rotary encoder change
 ISR(PCINT1_vect) {
