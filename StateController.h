@@ -12,7 +12,6 @@ enum PAGE { CHANNEL_LIST, CHANNEL_EDIT, SAVE_IN_PROGRESS };
 // Value to set the selected channel variable to if no channel is selected
 #define NO_CHANNEL_SELECTED -10
 #define NO_PARAMETERS_SELECTED -10
-
 // };
 
 // PAD[0] = sensitivity = MAX

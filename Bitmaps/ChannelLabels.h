@@ -1,5 +1,4 @@
 // Bitmaps for the channel label (e.g 1 2 3 4 5 6 7 8)
-
 #include <Arduino.h>
 
 // 'Channel 1', 16x8px

@@ -1,6 +1,8 @@
 #include "ChannelSettings.h"
 #include "Utils.h"
 
+#include "Bitmaps/Curves.h"
+
 // pass channel number in instantiation 
 // if first EEPROM cell is 0 write defaults
 // load EEPROM into settings
@@ -50,6 +52,8 @@ void ChannelSettings::save(void){
   }
 }
 
+
+
 void ChannelSettings::incrementParameter(int8_t parameter) {
   this->_modifyParameter(1, parameter);
 }
@@ -71,7 +75,6 @@ void ChannelSettings::_modifyParameter(int8_t amount, int8_t parameter) {
           break;
       }
       
-      
       // Clip threshold to 1, up to the current peak value
       case THRESHOLD: {
           this->setting[THRESHOLD] = clipValue(this->setting[THRESHOLD] + amount, THRESHOLD_MIN, this->setting[PEAK]);
@@ -80,7 +83,7 @@ void ChannelSettings::_modifyParameter(int8_t amount, int8_t parameter) {
 
       // Clip peak from current threshold value up to 100
       case CURVE: {
-          this->setting[CURVE] = clipValue(this->setting[CURVE] + amount, CURVE_MIN, CURVE_MAX);
+          this->setting[CURVE] = clipValue(this->setting[CURVE] + amount, CURVE_MIN, CURVE_MAX, CLIP_WRAP_AROUND);
           break;
       }
       
@@ -110,25 +113,30 @@ void  ChannelSettings::_drawNumber(Adafruit_SSD1306* display, int8_t number) {
   display->println(number);  
 }
 
-void  ChannelSettings::_drawCurve(Adafruit_SSD1306* display, int8_t curve) {
-  display->setTextSize(1);
-  display->setCursor(EDIT_PARAMETER_BOX_CURSOR_X, EDIT_PARAMETER_BOX_CURSOR_Y);  
-  display->println(curve);  
-  
+int8_t ChannelSettings::getHelloDrumCurveNumber(void) {
+  static const int8_t curveMap[NUM_CURVES] = {4, 3, 0, 1, 2};
+  return curveMap[this->setting[CURVE]];
+}
+
+void  ChannelSettings::_drawCurve(Adafruit_SSD1306* display, int8_t curve, int8_t foregroundColour) {
+  display->drawBitmap(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, curveBitmaps[this->setting[CURVE]], 63, 24, foregroundColour);
 }
 
 // Handles drawing the selected parameter to the display when we're in edit mode
 void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter) {
+  int8_t foregroundColour;
   
   // If we're editing a parameter, show a solid filled area with inverted text
   // otherwise just draw an outline and show solid text
   if (editingParameter) {
     display->fillRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);      
-    display->setTextColor(SSD1306_BLACK);
+    foregroundColour = SSD1306_BLACK;
   } else {
     display->drawRect(EDIT_PARAMETER_BOX_LEFT, EDIT_PARAMETER_BOX_TOP, EDIT_PARAMETER_BOX_WIDTH, EDIT_PARAMETER_BOX_HEIGHT, SSD1306_WHITE);  
-    display->setTextColor(SSD1306_WHITE);
+    foregroundColour = SSD1306_WHITE;
   }
+
+  display->setTextColor(foregroundColour);  
 
   switch(parameter) {
     // Turn the midi note number (0-127) into a note (i.e C#) and an octave number
@@ -164,7 +172,7 @@ void ChannelSettings::drawParameter(Adafruit_SSD1306* display, int8_t parameter,
 
     // TODO: Draw bitmap of each curve profile to display
     case CURVE: {
-      this->_drawCurve(display, this->setting[CURVE]);
+      this->_drawCurve(display, this->setting[CURVE], foregroundColour);
       break;
     }
     

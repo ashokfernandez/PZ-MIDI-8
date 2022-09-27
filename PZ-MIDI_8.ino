@@ -5,6 +5,8 @@
 #include "StateController.h"
 #include "ViewController.h"
 
+#include "Bitmaps/ChannelLabels.h"
+
 // Setup hardware objects
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
@@ -26,7 +28,7 @@ ViewController* view;
 //   ChannelSettings(channel8Settings)
 // };
 
-#include "BitmapLabels.h"
+
 
 Channel channels[] = {
   Channel(bitmapLabel_channel1, 0), 

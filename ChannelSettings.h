@@ -67,6 +67,11 @@
       // ChannelSettings(int8_t channelNumber);
       ChannelSettings(int8_t channelNumber);
       int8_t setting[NUM_PARAMETERS];
+
+      // Curve numbers were remapped from HelloDrum to look nicer on the display, use this 
+      // getter to get the index of the current curve in terms of HelloDrum curves
+      // https://github.com/RyoKosaka/HelloDrum-arduino-Library/blob/master/docs/sensing.md
+      int8_t getHelloDrumCurveNumber(void);
       
       // Given an index to a parameter, increment or decrement the value. 
       // Handles clipping to the approrate range
@@ -85,7 +90,7 @@
       void _initSettingsFromEEPROM(void);
       void _drawNumber(Adafruit_SSD1306* display, int8_t number);
       void _drawNumberWithMs(Adafruit_SSD1306* display, int8_t number);
-      void _drawCurve(Adafruit_SSD1306* display, int8_t curve);
+      void _drawCurve(Adafruit_SSD1306* display, int8_t curve, int8_t foregroundColour);
       void _modifyParameter(int8_t amount, int8_t parameter);
   };
 
