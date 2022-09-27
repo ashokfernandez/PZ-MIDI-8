@@ -13,19 +13,41 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
-// HelloDrumMUX_4051 mux(MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3, MUX_ANALOG_PIN_IN);
+MUX_4051 mux([MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3], MUX_ANALOG_PIN_IN);
 
-// Setup software objects
+// // Setup software objects
+// // HelloDrum objects with their MUX pin
+// HelloDrum drumChannel1(0);
+// HelloDrum drumChannel2(1);
+// HelloDrum drumChannel3(2);
+// HelloDrum drumChannel4(3);
+// HelloDrum drumChannel5(4);
+// HelloDrum drumChannel6(5);
+// HelloDrum drumChannel7(6);
+// HelloDrum drumChannel8(7);
+
+// Channel channels[] = {
+//   Channel(0, channelLabelBitmap_channel1, &drumChannel1), 
+//   Channel(1, channelLabelBitmap_channel2, &drumChannel2), 
+//   Channel(2, channelLabelBitmap_channel3, &drumChannel3), 
+//   Channel(3, channelLabelBitmap_channel4, &drumChannel4), 
+//   Channel(4, channelLabelBitmap_channel5, &drumChannel5), 
+//   Channel(5, channelLabelBitmap_channel6, &drumChannel6), 
+//   Channel(6, channelLabelBitmap_channel7, &drumChannel7), 
+//   Channel(7, channelLabelBitmap_channel8, &drumChannel8)
+// };
+
 Channel channels[] = {
-  Channel(channelLabelBitmap_channel1, 0), 
-  Channel(channelLabelBitmap_channel2, 1), 
-  Channel(channelLabelBitmap_channel3, 2), 
-  Channel(channelLabelBitmap_channel4, 3), 
-  Channel(channelLabelBitmap_channel5, 4), 
-  Channel(channelLabelBitmap_channel6, 5), 
-  Channel(channelLabelBitmap_channel7, 6), 
-  Channel(channelLabelBitmap_channel8, 7)
+  Channel(0, channelLabelBitmap_channel1), //, &drumChannel1), 
+  Channel(1, channelLabelBitmap_channel2), //, &drumChannel2), 
+  Channel(2, channelLabelBitmap_channel3), //, &drumChannel3), 
+  Channel(3, channelLabelBitmap_channel4), //, &drumChannel4), 
+  Channel(4, channelLabelBitmap_channel5), //, &drumChannel5), 
+  Channel(5, channelLabelBitmap_channel6), //, &drumChannel6), 
+  Channel(6, channelLabelBitmap_channel7), //, &drumChannel7), 
+  Channel(7, channelLabelBitmap_channel8) //, &drumChannel8)
 };
+
 StateController* state = new StateController(channels);
 ViewController* view = new ViewController(&display, state, channels);
 
@@ -63,7 +85,7 @@ void buttonLongClicked(void) {
 void drawDisplay() { view->drawDisplay(); }
 void updateState() {
   button.update(); // Needed for long press functionality to work
-  // mux.scan(); // Scan the multiplexer
+  // mux.scanAnalogInputs(); // Scan the multiplexer
 
   // for (uint8_t i = 0; i < NUM_CHANNELS; i++){
   //   channels[i].scanForDrumHit();

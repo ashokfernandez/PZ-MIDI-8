@@ -24,7 +24,8 @@
 
 class Channel {
   public:
-      Channel(const unsigned char* labelBitmap, int8_t channelNumber);
+      // Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum);
+      Channel(int8_t channelNumber, const unsigned char* labelBitmap);
 
       // Methods to render the channel on the screen, either as a column in a list of channels
       // or an edit screen of a single channel

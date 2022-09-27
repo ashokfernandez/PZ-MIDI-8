@@ -3,12 +3,13 @@
 #include "StateController.h"
 #include "Utils.h"
 
-Channel::Channel(const unsigned char* labelBitmap, int8_t channelNumber) {
+// Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum) {
+Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap) {  
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
   this->_channelNumber = channelNumber;
   this->_level = 0; // Meter display level
   this->_settings = new ChannelSettings(channelNumber);
-  this->_drum = new HelloDrum(channelNumber);
+  // this->_drum = drum;
 }
 
 void Channel::scanForDrumHit(void){
