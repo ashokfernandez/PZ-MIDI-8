@@ -27,12 +27,18 @@
 #define CONFIG_H
 
   #define NUM_CHANNELS 8 
+  #define MIDI_CHANNEL 1
 
   // Rotary encoder and switch
   #define ROTARY_DATA_PIN A2
   #define ROTARY_CLOCK_PIN A3
   #define ROTARY_PUSH_BUTTON_PIN 2
   #define LONG_PRESS_DURATION_MS 1500
+
+  #define MUX_SELECT_PIN_1 2
+  #define MUX_SELECT_PIN_2 3
+  #define MUX_SELECT_PIN_3 4
+  #define MUX_ANALOG_PIN_IN A0
 
   // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
   // The pins for I2C are defined by the Wire-library. 

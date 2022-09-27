@@ -8,6 +8,20 @@ Channel::Channel(const unsigned char* labelBitmap, int8_t channelNumber) {
   this->_channelNumber = channelNumber;
   this->_level = 0; // Meter display level
   this->_settings = new ChannelSettings(channelNumber);
+  this->_drum = new HelloDrum(channelNumber);
+}
+
+void Channel::scanForDrumHit(void){
+  this->_drum->singlePiezoMUX(this->_settings->setting[PEAK], this->_settings->setting[THRESHOLD], this->_settings->setting[SCAN], this->_settings->setting[RETRIGGER]);
+}
+
+void Channel::sendDrumHitOverMIDI(void){
+  if(this->_drum->hit) {
+    // TODO replace with sending actual midi messages
+    Serial.print(this->_channelNumber);
+    Serial.println(" hit detected!");
+    Serial.println(this->_drum->velocity);
+  }
 }
 
 void Channel::drawListView(Adafruit_SSD1306* display, StateController* state){   

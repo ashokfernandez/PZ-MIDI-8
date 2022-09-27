@@ -13,6 +13,7 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
+// HelloDrumMUX_4051 mux(MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3, MUX_ANALOG_PIN_IN);
 
 // Setup software objects
 Channel channels[] = {
@@ -62,6 +63,12 @@ void buttonLongClicked(void) {
 void drawDisplay() { view->drawDisplay(); }
 void updateState() {
   button.update(); // Needed for long press functionality to work
+  // mux.scan(); // Scan the multiplexer
+
+  // for (uint8_t i = 0; i < NUM_CHANNELS; i++){
+  //   channels[i].scanForDrumHit();
+  //   channels[i].sendDrumHitOverMIDI();
+  // }
 }
 
 void simulateInputLevels() {

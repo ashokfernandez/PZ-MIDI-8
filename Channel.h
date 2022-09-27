@@ -40,6 +40,8 @@ class Channel {
       void decrementParameter(int8_t parameter);
 
       // Manual testing, should be replaced by a some kind of IO scan
+      void scanForDrumHit(void);
+      void sendDrumHitOverMIDI(void);
       int8_t getLevel(void);
       void setLevel(int8_t);
 
@@ -50,6 +52,7 @@ class Channel {
       ChannelSettings* _settings;
       const unsigned char* _labelBitmap;
       int8_t _level;
+      HelloDrum* _drum;
 
       int8_t _getMeterHeight(void);
 };
