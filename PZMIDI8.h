@@ -30,9 +30,9 @@
   #define MIDI_CHANNEL 1
 
   // Rotary encoder and switch
-  #define ROTARY_DATA_PIN A2
-  #define ROTARY_CLOCK_PIN A3
-  #define ROTARY_PUSH_BUTTON_PIN 2
+  #define ROTARY_DATA_PIN 0
+  #define ROTARY_CLOCK_PIN 1
+  #define ROTARY_PUSH_BUTTON_PIN 7
   #define LONG_PRESS_DURATION_MS 1500
 
   #define MUX_SELECT_PIN_1 2

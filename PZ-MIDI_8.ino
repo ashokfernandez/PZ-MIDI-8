@@ -1,6 +1,7 @@
 #include <TaskScheduler.h>
 
 #include "PZMIDI8.h"
+#include "MUX_4051.h"
 #include "Channel.h"
 #include "StateController.h"
 #include "ViewController.h"
@@ -13,7 +14,7 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
-MUX_4051 mux([MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3], MUX_ANALOG_PIN_IN);
+MUX_4051 mux(MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3, MUX_ANALOG_PIN_IN);
 
 // // Setup software objects
 // // HelloDrum objects with their MUX pin
@@ -53,7 +54,8 @@ ViewController* view = new ViewController(&display, state, channels);
 
 
 // ISR for rotary encoder change
-ISR(PCINT1_vect) {
+// ISR(PCINT1_vect) {
+void encoderISR(void) {
   encoder.tick();
 
   switch(encoder.getDirection()){
@@ -118,8 +120,11 @@ void setup() {
   display.clearDisplay();
   
   // Attach interrupts for rotary encoder  
-  PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
-  PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
+  // PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
+  // PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
+
+  attachInterrupt(digitalPinToInterrupt(ROTARY_DATA_PIN), encoderISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ROTARY_CLOCK_PIN), encoderISR, CHANGE);
 
   // Attach callbacks and interrupt to push button switch
   button.begin();
