@@ -4,25 +4,26 @@
 #include "Utils.h"
 
 // Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum) {
-Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap) {  
+Channel::Channel(int8_t channelNumber, int16_t* inputAddress, const unsigned char* labelBitmap) {  
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
   this->_channelNumber = channelNumber;
   this->_level = 0; // Meter display level
   this->_settings = new ChannelSettings(channelNumber);
-  // this->_drum = drum;
+  this->_drum = new Drum(inputAddress, this->_settings);
+  // this->_drum = drum
 }
 
 void Channel::scanForDrumHit(void){
-  this->_drum->singlePiezoMUX(this->_settings->setting[PEAK], this->_settings->setting[THRESHOLD], this->_settings->setting[SCAN], this->_settings->setting[RETRIGGER]);
+  // this->_drum->singlePiezoMUX(this->_settings->setting[PEAK], this->_settings->setting[THRESHOLD], this->_settings->setting[SCAN], this->_settings->setting[RETRIGGER]);
 }
 
 void Channel::sendDrumHitOverMIDI(void){
-  if(this->_drum->hit) {
+  // if(this->_drum->hit) {
     // TODO replace with sending actual midi messages
-    Serial.print(this->_channelNumber);
-    Serial.println(" hit detected!");
-    Serial.println(this->_drum->velocity);
-  }
+    // Serial.print(this->_channelNumber);
+    // Serial.println(" hit detected!");
+    // Serial.println(this->_drum->velocity);
+  // }
 }
 
 void Channel::drawListView(Adafruit_SSD1306* display, StateController* state){   
@@ -135,6 +136,14 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
   // area if we're editing that parameter
   ---------------------------------------------------------------------------*/
   this->_settings->drawParameter(display, state->selectedParameter, state->editingParameter);
+}
+
+
+void Channel::update(void) {
+  //todo: 
+  // get drum to scan input
+  // if there's a hit, send out a midi message
+
 }
 
 

@@ -5,7 +5,6 @@
   #include <Arduino.h>
   #include <math.h>
   #include <EEPROM.h>
-  #include <hellodrum.h>
   #include <SPI.h>
   #include <Wire.h>
   #include <EasyButton.h>

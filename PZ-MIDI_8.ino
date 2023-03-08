@@ -39,14 +39,14 @@ MUX_4051 mux(MUX_SELECT_PIN_1, MUX_SELECT_PIN_2, MUX_SELECT_PIN_3, MUX_ANALOG_PI
 // };
 
 Channel channels[] = {
-  Channel(0, channelLabelBitmap_channel1), //, &drumChannel1), 
-  Channel(1, channelLabelBitmap_channel2), //, &drumChannel2), 
-  Channel(2, channelLabelBitmap_channel3), //, &drumChannel3), 
-  Channel(3, channelLabelBitmap_channel4), //, &drumChannel4), 
-  Channel(4, channelLabelBitmap_channel5), //, &drumChannel5), 
-  Channel(5, channelLabelBitmap_channel6), //, &drumChannel6), 
-  Channel(6, channelLabelBitmap_channel7), //, &drumChannel7), 
-  Channel(7, channelLabelBitmap_channel8) //, &drumChannel8)
+  Channel(0, mux.getInputAddress(0), channelLabelBitmap_channel1), //, &drumChannel1), 
+  Channel(1, mux.getInputAddress(1), channelLabelBitmap_channel2), //, &drumChannel2), 
+  Channel(2, mux.getInputAddress(2), channelLabelBitmap_channel3), //, &drumChannel3), 
+  Channel(3, mux.getInputAddress(3), channelLabelBitmap_channel4), //, &drumChannel4), 
+  Channel(4, mux.getInputAddress(4), channelLabelBitmap_channel5), //, &drumChannel5), 
+  Channel(5, mux.getInputAddress(5), channelLabelBitmap_channel6), //, &drumChannel6), 
+  Channel(6, mux.getInputAddress(6), channelLabelBitmap_channel7), //, &drumChannel7), 
+  Channel(7, mux.getInputAddress(7), channelLabelBitmap_channel8) //, &drumChannel8)
 };
 
 StateController* state = new StateController(channels);
@@ -123,8 +123,9 @@ void updateState() {
   
 
   for (uint8_t i = 0; i < NUM_CHANNELS; i++){
-    channels[i].scanForDrumHit();
-    channels[i].sendDrumHitOverMIDI();
+    // channels[i].scanForDrumHit();
+    // channels[i].sendDrumHitOverMIDI();
+    channels[i].update();
   }
 }
 
