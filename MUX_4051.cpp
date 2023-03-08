@@ -13,7 +13,7 @@ MUX_4051::MUX_4051(int8_t selectPin0, int8_t selectPin1, int8_t selectPin2, int8
       digitalWrite(selectPin[i], HIGH);
   }
 
-    // Clear the buffer
+  // Clear the buffer
   for (uint8_t i = 0; i < NUM_ANALOG_INPUTS; i++){
       this->inputBuffer[i] = 0;
   }
@@ -35,6 +35,18 @@ void MUX_4051::scanAnalogInputs(void){
     // rawValue[pin] = analogRead(this->analogInPin);
   // }
 
+ 
+  for (int8_t i = 0; i < NUM_ANALOG_INPUTS; i++){
+    digitalWrite(this->selectPin[0], HIGH && (i & B00000001));
+    digitalWrite(this->selectPin[1], HIGH && (i & B00000010));
+    digitalWrite(this->selectPin[2], HIGH && (i & B00000100));
+    this->inputBuffer[i] = analogRead(this->analogInPin);
+  }
+
+}
+
+int16_t MUX_4051::getInput(int8_t inputIndex) {
+  return this->inputBuffer[inputIndex];
 }
 
 // Class MUX_4051 {

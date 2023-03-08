@@ -155,7 +155,6 @@ void Channel::saveSettings(void) {
   this->_settings->save();
 }
 
-
 int8_t Channel::_getMeterHeight(void){
   return clipValue(SCALE_LEVEL_TO_METER(getLevel()), 0, MAIN_DISPLAY_HEIGHT);
 }
@@ -163,6 +162,7 @@ int8_t Channel::_getMeterHeight(void){
 void Channel::incrementParameter(int8_t parameter) {
   this->_settings->incrementParameter(parameter);
 }
+
 void Channel::decrementParameter(int8_t parameter) {
   this->_settings->decrementParameter(parameter);
 }

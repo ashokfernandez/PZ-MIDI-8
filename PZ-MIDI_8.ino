@@ -54,7 +54,6 @@ ViewController* view = new ViewController(&display, state, channels);
 
 
 // ISR for rotary encoder change
-// ISR(PCINT1_vect) {
 void encoderISR(void) {
   encoder.tick();
 
@@ -87,12 +86,46 @@ void buttonLongClicked(void) {
 void drawDisplay() { view->drawDisplay(); }
 void updateState() {
   button.update(); // Needed for long press functionality to work
-  // mux.scanAnalogInputs(); // Scan the multiplexer
+  mux.scanAnalogInputs(); // Scan the multiplexer
+  
 
-  // for (uint8_t i = 0; i < NUM_CHANNELS; i++){
-  //   channels[i].scanForDrumHit();
-  //   channels[i].sendDrumHitOverMIDI();
-  // }
+  // Serial.print("Floor:");
+  // Serial.print(0);
+  // Serial.print(",");
+  // Serial.print("Ceil:");
+  // Serial.print(1023);
+  // Serial.print(",");
+  // Serial.print("MUXIN0:");
+  // // Serial.println(analogRead(MUX_ANALOG_PIN_IN));  
+  // Serial.print(mux.getInput(0));  
+  // Serial.print(",");
+  // Serial.print("MUXIN1:");
+  // Serial.print(mux.getInput(1));  
+  // Serial.print(",");
+  // Serial.print("MUXIN2:");
+  // Serial.print(mux.getInput(2));  
+  // Serial.print(",");
+  // Serial.print("MUXIN3:");
+  // Serial.print(mux.getInput(3));  
+  // Serial.print(",");
+  // Serial.print("MUXIN4:");
+  // Serial.print(mux.getInput(4));  
+  // Serial.print(",");
+  // Serial.print("MUXIN5:");
+  // Serial.print(mux.getInput(5));  
+  // Serial.print(",");
+  // Serial.print("MUXIN6:");
+  // Serial.print(mux.getInput(6));  
+  // Serial.print(",");
+  // Serial.print("MUXIN7:");
+  // Serial.println(mux.getInput(7));  
+  
+  
+
+  for (uint8_t i = 0; i < NUM_CHANNELS; i++){
+    channels[i].scanForDrumHit();
+    channels[i].sendDrumHitOverMIDI();
+  }
 }
 
 void simulateInputLevels() {
@@ -119,10 +152,7 @@ void setup() {
   // Reset display buffer
   display.clearDisplay();
   
-  // Attach interrupts for rotary encoder  
-  // PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
-  // PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
-
+  // Attach interrupts for rotary encoder 
   attachInterrupt(digitalPinToInterrupt(ROTARY_DATA_PIN), encoderISR, CHANGE);
   attachInterrupt(digitalPinToInterrupt(ROTARY_CLOCK_PIN), encoderISR, CHANGE);
 
