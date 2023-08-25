@@ -3,11 +3,27 @@
 #include "StateController.h"
 #include "Utils.h"
 
-Channel::Channel(const unsigned char* labelBitmap, int8_t channelNumber) {
+// Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum) {
+Channel::Channel(int8_t channelNumber, int16_t* inputAddress, const unsigned char* labelBitmap) {  
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
   this->_channelNumber = channelNumber;
   this->_level = 0; // Meter display level
   this->_settings = new ChannelSettings(channelNumber);
+  this->_drum = new Drum(inputAddress, this->_settings);
+  // this->_drum = drum
+}
+
+void Channel::scanForDrumHit(void){
+  // this->_drum->singlePiezoMUX(this->_settings->setting[PEAK], this->_settings->setting[THRESHOLD], this->_settings->setting[SCAN], this->_settings->setting[RETRIGGER]);
+}
+
+void Channel::sendDrumHitOverMIDI(void){
+  // if(this->_drum->hit) {
+    // TODO replace with sending actual midi messages
+    // Serial.print(this->_channelNumber);
+    // Serial.println(" hit detected!");
+    // Serial.println(this->_drum->velocity);
+  // }
 }
 
 void Channel::drawListView(Adafruit_SSD1306* display, StateController* state){   
@@ -123,6 +139,14 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
 }
 
 
+void Channel::update(void) {
+  //todo: 
+  // get drum to scan input
+  // if there's a hit, send out a midi message
+
+}
+
+
 int8_t Channel::getLevel(void){
   return _level;
 }
@@ -140,7 +164,6 @@ void Channel::saveSettings(void) {
   this->_settings->save();
 }
 
-
 int8_t Channel::_getMeterHeight(void){
   return clipValue(SCALE_LEVEL_TO_METER(getLevel()), 0, MAIN_DISPLAY_HEIGHT);
 }
@@ -148,6 +171,7 @@ int8_t Channel::_getMeterHeight(void){
 void Channel::incrementParameter(int8_t parameter) {
   this->_settings->incrementParameter(parameter);
 }
+
 void Channel::decrementParameter(int8_t parameter) {
   this->_settings->decrementParameter(parameter);
 }

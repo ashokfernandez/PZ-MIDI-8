@@ -1,5 +1,6 @@
 #include "PZMIDI8.h"
 #include "ChannelSettings.h"
+#include "Drum.h"
 
 #ifndef CHANNEL_h
 #define CHANNEL_h
@@ -24,7 +25,8 @@
 
 class Channel {
   public:
-      Channel(const unsigned char* labelBitmap, int8_t channelNumber);
+      // Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum);
+      Channel(int8_t channelNumber, int16_t* inputAddress, const unsigned char* labelBitmap);
 
       // Methods to render the channel on the screen, either as a column in a list of channels
       // or an edit screen of a single channel
@@ -39,7 +41,13 @@ class Channel {
       void incrementParameter(int8_t parameter);
       void decrementParameter(int8_t parameter);
 
-      // Manual testing, should be replaced by a some kind of IO scan
+      
+      void update(void);
+      
+      // Manual testing, should be replaced by a some kind of IO scan (e.g update method)
+      // scrap these methods
+      void scanForDrumHit(void);
+      void sendDrumHitOverMIDI(void);
       int8_t getLevel(void);
       void setLevel(int8_t);
 
@@ -47,9 +55,12 @@ class Channel {
 
   private:
       int8_t _channelNumber;
-      ChannelSettings* _settings;
       const unsigned char* _labelBitmap;
+      int16_t* _inputAddress;
       int8_t _level;
+
+      ChannelSettings* _settings;
+      Drum* _drum;
 
       int8_t _getMeterHeight(void);
 };
