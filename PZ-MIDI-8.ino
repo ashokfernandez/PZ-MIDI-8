@@ -8,9 +8,7 @@
 
 #include "Bitmaps/ChannelLabels.h"
 
-// Allocate key objects to the heap to save dynamic memory
-
-// Setup hardware objects
+// Setup hardware objects, these are global since they can only be instantied
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
 EasyButton button(ROTARY_PUSH_BUTTON_PIN);
@@ -84,47 +82,13 @@ void buttonLongClicked(void) {
 
 // Callbacks to be executed by the task scheduler
 void drawDisplay() { view->drawDisplay(); }
+
 void updateState() {
   button.update(); // Needed for long press functionality to work
-  mux.scanAnalogInputs(); // Scan the multiplexer
+  mux.scanAnalogInputs(); // Scan the multiplexer to update the analog input values
   
-
-  // Serial.print("Floor:");
-  // Serial.print(0);
-  // Serial.print(",");
-  // Serial.print("Ceil:");
-  // Serial.print(1023);
-  // Serial.print(",");
-  // Serial.print("MUXIN0:");
-  // // Serial.println(analogRead(MUX_ANALOG_PIN_IN));  
-  // Serial.print(mux.getInput(0));  
-  // Serial.print(",");
-  // Serial.print("MUXIN1:");
-  // Serial.print(mux.getInput(1));  
-  // Serial.print(",");
-  // Serial.print("MUXIN2:");
-  // Serial.print(mux.getInput(2));  
-  // Serial.print(",");
-  // Serial.print("MUXIN3:");
-  // Serial.print(mux.getInput(3));  
-  // Serial.print(",");
-  // Serial.print("MUXIN4:");
-  // Serial.print(mux.getInput(4));  
-  // Serial.print(",");
-  // Serial.print("MUXIN5:");
-  // Serial.print(mux.getInput(5));  
-  // Serial.print(",");
-  // Serial.print("MUXIN6:");
-  // Serial.print(mux.getInput(6));  
-  // Serial.print(",");
-  // Serial.print("MUXIN7:");
-  // Serial.println(mux.getInput(7));  
-  
-  
-
   for (uint8_t i = 0; i < NUM_CHANNELS; i++){
-    // channels[i].scanForDrumHit();
-    // channels[i].sendDrumHitOverMIDI();
+    // Processes updated analog input values and sends MIDI messages
     channels[i].update();
   }
 }
@@ -133,6 +97,10 @@ void simulateInputLevels() {
   for(int8_t i=0; i<NUM_CHANNELS; i++){
     channels[i].setLevel(i*15);
   }
+}
+
+void simulateMidiMessage() {
+  
 }
 
 // Setup the task scheduler to manage what should run when

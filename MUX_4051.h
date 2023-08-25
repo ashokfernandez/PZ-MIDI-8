@@ -1,6 +1,5 @@
 #include "PZMIDI8.h"
 
-
 #define NUM_SELECT_PINS 3
 #define NUM_ANALOG_INPUTS 8
 
