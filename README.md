@@ -8,4 +8,4 @@ Work in progress - task list [here](https://lemon-liver-f3d.notion.site/PZ-MIDI-
 [EasyButton 2.0.3](https://github.com/evert-arias/EasyButton)
 [RotaryEncoder 1.5.3](https://github.com/mathertel/RotaryEncoder)
 [Adafruit SSD1306 2.5.7](https://github.com/adafruit/Adafruit_SSD1306)
-[MIDIUSB 1.0.5](https://github.com/arduino-libraries/MIDIUSB)
+[Arduino-USBMIDI 1.1.2](https://github.com/lathoub/Arduino-USBMIDI)

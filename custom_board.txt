@@ -1,0 +1,62 @@
+# Copy paste this to the end of your boards.txt file located in hardware\arduino\avr
+# then select the board in your Arduino IDE. This sets the custom USB product name 
+# which is displayed when the device is plugged in. 
+
+pzmidi.name=PZ MIDI 8
+
+pzmidi.vid.0=0x2341
+pzmidi.pid.0=0x0037
+pzmidi.vid.1=0x2341
+pzmidi.pid.1=0x8037
+pzmidi.vid.2=0x2A03
+pzmidi.pid.2=0x0037
+pzmidi.vid.3=0x2A03
+pzmidi.pid.3=0x8037
+pzmidi.vid.4=0x2341
+pzmidi.pid.4=0x0237
+pzmidi.vid.5=0x2341
+pzmidi.pid.5=0x8237
+pzmidi.upload_port.0.vid=0x2341
+pzmidi.upload_port.0.pid=0x0037
+pzmidi.upload_port.1.vid=0x2341
+pzmidi.upload_port.1.pid=0x8037
+pzmidi.upload_port.2.vid=0x2A03
+pzmidi.upload_port.2.pid=0x0037
+pzmidi.upload_port.3.vid=0x2A03
+pzmidi.upload_port.3.pid=0x8037
+pzmidi.upload_port.4.vid=0x2341
+pzmidi.upload_port.4.pid=0x0237
+pzmidi.upload_port.5.vid=0x2341
+pzmidi.upload_port.5.pid=0x8237
+pzmidi.upload_port.6.board=micro
+
+pzmidi.upload.tool=avrdude
+pzmidi.upload.tool.default=avrdude
+pzmidi.upload.tool.network=arduino_ota
+pzmidi.upload.protocol=avr109
+pzmidi.upload.maximum_size=28672
+pzmidi.upload.maximum_data_size=2560
+pzmidi.upload.speed=57600
+pzmidi.upload.disable_flushing=true
+pzmidi.upload.use_1200bps_touch=true
+pzmidi.upload.wait_for_upload_port=true
+
+pzmidi.bootloader.tool=avrdude
+pzmidi.bootloader.tool.default=avrdude
+pzmidi.bootloader.low_fuses=0xff
+pzmidi.bootloader.high_fuses=0xd8
+pzmidi.bootloader.extended_fuses=0xcb
+pzmidi.bootloader.file=caterina/Caterina-Micro.hex
+pzmidi.bootloader.unlock_bits=0x3F
+pzmidi.bootloader.lock_bits=0x2F
+
+pzmidi.build.mcu=atmega32u4
+pzmidi.build.f_cpu=16000000L
+pzmidi.build.vid=0x2341
+pzmidi.build.pid=0x8037
+pzmidi.build.usb_product="PZ-MIDI 8"
+pzmidi.build.board=AVR_MICRO
+pzmidi.build.core=arduino
+pzmidi.build.variant=micro
+pzmidi.build.extra_flags={build.usb_flags}
+
