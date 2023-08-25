@@ -8,6 +8,11 @@
 
 #include "Bitmaps/ChannelLabels.h"
 
+#include <USB-MIDI.h>
+
+USBMIDI_CREATE_DEFAULT_INSTANCE();
+
+
 // Setup hardware objects, these are global since they can only be instantied
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 RotaryEncoder encoder(ROTARY_DATA_PIN, ROTARY_CLOCK_PIN, RotaryEncoder::LatchMode::FOUR3);
@@ -93,14 +98,36 @@ void updateState() {
   }
 }
 
+
+
 void simulateInputLevels() {
   for(int8_t i=0; i<NUM_CHANNELS; i++){
     channels[i].setLevel(i*15);
   }
 }
 
+
+unsigned long previousMillis = 0;  // will store last time note was updated
+const long interval = 1000;  // interval at which to send note (milliseconds)
+bool noteIsOn = false;  // state of the note
+
 void simulateMidiMessage() {
-  
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval) {
+    // save the last time you sent a note
+    previousMillis = currentMillis;
+
+    if (noteIsOn) {
+      // Turn the note off
+      MIDI.sendNoteOff(60, 0, 1);  // Note number, velocity, channel
+      noteIsOn = false;
+    } else {
+      // Turn the note on
+      MIDI.sendNoteOn(60, 127, 1);  // Note number, velocity, channel
+      noteIsOn = true;
+    }
+  }
 }
 
 // Setup the task scheduler to manage what should run when
@@ -108,6 +135,7 @@ Scheduler taskScheduler;
 Task scanInputs(TASK_IMMEDIATE, TASK_FOREVER, &updateState, &taskScheduler, true);
 Task updateDisplay(33 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskScheduler, true); // 33ms ~ 30fps
 Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
+Task mockMidiMessages(500 * TASK_MILLISECOND, TASK_FOREVER, &simulateMidiMessage, &taskScheduler, true);
 
 void setup() {
   Serial.begin(9600);
