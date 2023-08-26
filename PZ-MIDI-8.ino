@@ -125,8 +125,8 @@ void simulateMidiMessage() {
 Scheduler taskScheduler;
 Task scanInputs(TASK_IMMEDIATE, TASK_FOREVER, &updateState, &taskScheduler, true);
 Task updateDisplay(33 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskScheduler, true); // 33ms ~ 30fps
-Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
-Task mockMidiMessages(500 * TASK_MILLISECOND, TASK_FOREVER, &simulateMidiMessage, &taskScheduler, true);
+// Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
+// Task mockMidiMessages(500 * TASK_MILLISECOND, TASK_FOREVER, &simulateMidiMessage, &taskScheduler, true);
 
 // ------------------------------
 // Setup and loop
