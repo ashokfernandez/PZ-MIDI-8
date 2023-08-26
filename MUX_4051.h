@@ -1,5 +1,8 @@
 #include "PZMIDI8.h"
 
+#ifndef MUX_4051_h
+#define MUX_4051_h
+
 #define NUM_SELECT_PINS 3
 #define NUM_ANALOG_INPUTS 8
 
@@ -11,5 +14,6 @@ class MUX_4051 {
         volatile static inline int16_t inputBuffer[NUM_ANALOG_INPUTS];
         void scanAnalogInputs(void);
         int16_t getInputValue(int8_t inputIndex);
-        int16_t* getInputAddress(int8_t inputIndex);
 };
+
+#endif

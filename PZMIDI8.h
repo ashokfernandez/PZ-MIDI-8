@@ -10,6 +10,7 @@
   #include <EasyButton.h>
   #include <RotaryEncoder.h>
   #include <Adafruit_SSD1306.h>
+  #include <USB-MIDI.h>
 
 #endif
 

@@ -81,6 +81,9 @@
       // Load and save settings to EEPROM
       void save(void);
 
+      // Get a settings value
+      int8_t get(int8_t parameter);
+
       // Handles drawing a single parameter to display when we're in edit mode
       void drawParameter(Adafruit_SSD1306* display, int8_t parameter, bool editingParameter);
         

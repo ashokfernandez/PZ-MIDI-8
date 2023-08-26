@@ -1,16 +1,27 @@
 #include "Channel.h"
-
 #include "StateController.h"
 #include "Utils.h"
 
+// TODO remove this and make it a setting
+#define TEMP_NOTE_TIME 500
+
 // Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum) {
-Channel::Channel(int8_t channelNumber, int16_t* inputAddress, const unsigned char* labelBitmap) {  
+Channel::Channel(int8_t channelNumber, const unsigned char* labelBitmap) {  
   this->_labelBitmap = labelBitmap; // Label to display at the top of the list view
   this->_channelNumber = channelNumber;
-  this->_level = 0; // Meter display level
+  
+  this->_level = 0; // Tracks the current height of the level meters on the channel list view, allows for decay animation
+  this->_analogInputPeakValue = 0; // Tracks the peak value of the analog input when scanning
+
   this->_settings = new ChannelSettings(channelNumber);
-  this->_drum = new Drum(inputAddress, this->_settings);
-  // this->_drum = drum
+  
+  this->_lastScanStartedMs = 0;
+  this->_lastRetriggerBlockStartedMs = 0;
+  this->_lastNoteStartedMs = 0;
+  this->_scanIsRunning = false;
+  this->_noteIsPlaying = false;
+  this->_retriggerBlock = false;
+
 }
 
 void Channel::scanForDrumHit(void){
@@ -25,6 +36,66 @@ void Channel::sendDrumHitOverMIDI(void){
     // Serial.println(this->_drum->velocity);
   // }
 }
+
+/**
+ * This function performs the following tasks:
+ * 1. Checks the analog input values from the multiplexer.
+ * 2. Initiates and completes a non-blocking scan to find the maximum value from the analog input.
+ * 3. Sends a MIDI NoteOn message with the calculated velocity based on the maximum analog input value.
+ * 4. Sends a MIDI NoteOff message after a predefined time has elapsed.
+ * 5. Implements a retrigger blocking period to debounce the analog signal, ignoring new inputs during this time.
+ * 
+ * The function uses the `millis()` function to manage time-dependent actions without blocking the main loop,
+ * allowing other tasks to run concurrently.
+ */
+void Channel::update(void) {
+  int16_t now = millis();
+  int16_t analogInputValue = Channel::mux->getInputValue(this->_channelNumber);
+
+  // Check if we are in a retrigger block period
+  if (this->_retriggerBlock && (now - this->_lastRetriggerBlockStartedMs >= this->_settings->get(RETRIGGER))) {
+    this->_retriggerBlock = false;
+  }
+
+  // Check if a note is playing and needs to be turned off
+  if (this->_noteIsPlaying && (now - this->_lastNoteStartedMs >= TEMP_NOTE_TIME)) {
+    // Send NoteOff
+    Channel::MIDI->sendNoteOff(this->_settings->get(NOTE), 0, 1);
+    this->_noteIsPlaying = false;
+  }
+
+  // Skip further processing if in retrigger block
+  if (this->_retriggerBlock) {
+    return;
+  }
+
+  // Start scanning if threshold is crossed and not already scanning
+  if (analogInputValue >= this->_settings->get(THRESHOLD) && !this->_scanIsRunning) {
+    this->_scanIsRunning = true;
+    this->_lastScanStartedMs = now;
+    this->_analogInputPeakValue = 0; // Reset peak value when starting a new scan
+  }
+
+  // If scanning, update the peak value
+  if (this->_scanIsRunning) {
+    this->_analogInputPeakValue = max(this->_analogInputPeakValue, analogInputValue);
+    if (now - this->_lastScanStartedMs >= this->_settings->get(SCAN)) {
+      // End scanning
+      this->_scanIsRunning = false;
+      this->_retriggerBlock = true;
+      this->_lastRetriggerBlockStartedMs = now;
+
+      // Convert _analogInputPeakValue to MIDI velocity and send NoteOn
+      int velocity = map(this->_analogInputPeakValue, 0, 1023, 0, 127); // Replace 0 and 1023 with actual min and max analog values
+      Channel::MIDI->sendNoteOn(this->_settings->get(NOTE), velocity, 1);
+      this->_noteIsPlaying = true;
+      this->_lastNoteStartedMs = now;
+    }
+  }
+}
+
+
+
 
 void Channel::drawListView(Adafruit_SSD1306* display, StateController* state){   
 
@@ -136,14 +207,6 @@ void Channel::drawEditView(Adafruit_SSD1306* display, StateController* state){
   // area if we're editing that parameter
   ---------------------------------------------------------------------------*/
   this->_settings->drawParameter(display, state->selectedParameter, state->editingParameter);
-}
-
-
-void Channel::update(void) {
-  //todo: 
-  // get drum to scan input
-  // if there's a hit, send out a midi message
-
 }
 
 

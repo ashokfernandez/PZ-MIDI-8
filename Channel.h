@@ -1,6 +1,6 @@
 #include "PZMIDI8.h"
+#include "MUX_4051.h"
 #include "ChannelSettings.h"
-#include "Drum.h"
 
 #ifndef CHANNEL_h
 #define CHANNEL_h
@@ -25,8 +25,14 @@
 
 class Channel {
   public:
-      // Channel(int8_t channelNumber, const unsigned char* labelBitmap, HelloDrum* drum);
-      Channel(int8_t channelNumber, int16_t* inputAddress, const unsigned char* labelBitmap);
+      Channel(int8_t channelNumber, const unsigned char* labelBitmap);
+
+      // Static member variable for shared refernece to the multiplexer and midi objects
+      static MUX_4051* mux;  
+      static usbMidi::MidiInterface<usbMidi::usbMidiTransport>* MIDI;
+      static void setMux(MUX_4051* m) { mux = m; };
+      static void setMIDI(usbMidi::MidiInterface<usbMidi::usbMidiTransport>* m) { MIDI = m; };
+
 
       // Methods to render the channel on the screen, either as a column in a list of channels
       // or an edit screen of a single channel
@@ -56,11 +62,21 @@ class Channel {
   private:
       int8_t _channelNumber;
       const unsigned char* _labelBitmap;
-      int16_t* _inputAddress;
-      int8_t _level;
+
+      int16_t _analogInputPeakValue;
+      int8_t _level; // Used for animation of the meter display
+
+      
+
+      int16_t _lastScanStartedMs;
+      int16_t _lastNoteStartedMs;
+      int16_t _lastRetriggerBlockStartedMs;
+      bool _scanIsRunning;
+      bool _noteIsPlaying;
+      bool _retriggerBlock;
+
 
       ChannelSettings* _settings;
-      Drum* _drum;
 
       int8_t _getMeterHeight(void);
 };

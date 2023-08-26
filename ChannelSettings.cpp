@@ -44,6 +44,10 @@ void ChannelSettings::_initSettingsFromEEPROM(void) {
   }
 }
 
+int8_t ChannelSettings::get(int8_t parameter) {
+  return this->setting[parameter];
+}
+
 void ChannelSettings::save(void){   
   // The EEPROM library's update will only actually write if something changed, saving 3.3ms of write time
   // and preserving the ~100,000 write limit of the EEPROM on the chip

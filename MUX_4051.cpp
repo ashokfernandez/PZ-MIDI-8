@@ -19,8 +19,7 @@ MUX_4051::MUX_4051(int8_t selectPin0, int8_t selectPin1, int8_t selectPin2, int8
   }
 }
 
-// int16_t MUX_4051::inputBuffer[NUM_ANALOG_INPUTS];
-
+// Scan all analog inputs and store the values in the buffer
 void MUX_4051::scanAnalogInputs(void){ 
   for (int8_t i = 0; i < NUM_ANALOG_INPUTS; i++){
     digitalWrite(this->selectPin[0], HIGH && (i & B00000001));
@@ -30,10 +29,7 @@ void MUX_4051::scanAnalogInputs(void){
   }
 }
 
+// Returns the current value of the input at the given index
 int16_t MUX_4051::getInputValue(int8_t inputIndex) {
   return this->inputBuffer[inputIndex];
-}
-
-int16_t* MUX_4051::getInputAddress(int8_t inputIndex) {
-  return &this->inputBuffer[inputIndex];
 }
