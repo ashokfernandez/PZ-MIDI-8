@@ -64,13 +64,13 @@ class Channel {
       const unsigned char* _labelBitmap;
 
       int16_t _analogInputPeakValue;
-      int8_t _level; // Used for animation of the meter display
+      int8_t _level; // Used for animation of the meter display, range 0 - 127
 
       
 
-      int16_t _lastScanStartedMs;
-      int16_t _lastNoteStartedMs;
-      int16_t _lastRetriggerBlockStartedMs;
+      unsigned long _lastScanStartedMs;
+      unsigned long _lastNoteStartedMs;
+      unsigned long _lastRetriggerBlockStartedMs;
       bool _scanIsRunning;
       bool _noteIsPlaying;
       bool _retriggerBlock;

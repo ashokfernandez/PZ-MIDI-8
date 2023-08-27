@@ -9,7 +9,7 @@
 #include "Bitmaps/ChannelLabels.h"
 
 
-USBMIDI_CREATE_DEFAULT_INSTANCE();
+// USBMIDI_CREATE_DEFAULT_INSTANCE();
 
 // ------------------------------
 // Setup hardware interfaces and main objects
@@ -92,9 +92,12 @@ void updateState() {
 
 // TODO: Remove this mock up, currently just tests the display meters work
 void simulateInputLevels() {
-  for(int8_t i=0; i<NUM_CHANNELS; i++){
-    channels[i].setLevel(i*15);
-  }
+  // for(int8_t i=0; i<NUM_CHANNELS; i++){
+    // channels[i].setLevel(i*15);
+  // }
+  // channels[0].setLevel(50);
+  Serial.print("Input_1:");
+  Serial.println(mux.getInputValue(1));
 }
 
 // TODO: Remove this mock up, currently just tests the MIDI output works
@@ -111,11 +114,11 @@ void simulateMidiMessage() {
 
     if (noteIsOn) {
       // Turn the note off
-      MIDI.sendNoteOff(60, 0, 1);  // Note number, velocity, channel
+      // MIDI.sendNoteOff(60, 0, 1);  // Note number, velocity, channel
       noteIsOn = false;
     } else {
       // Turn the note on
-      MIDI.sendNoteOn(60, 127, 1);  // Note number, velocity, channel
+      // MIDI.sendNoteOn(60, 127, 1);  // Note number, velocity, channel
       noteIsOn = true;
     }
   }
@@ -123,9 +126,9 @@ void simulateMidiMessage() {
 
 // Instantiate the task scheduler and define the tasks
 Scheduler taskScheduler;
-Task scanInputs(TASK_IMMEDIATE, TASK_FOREVER, &updateState, &taskScheduler, true);
+Task scanInputs(TASK_MILLISECOND, TASK_FOREVER, &updateState, &taskScheduler, true); // 1ms ~ 1KHz
 Task updateDisplay(33 * TASK_MILLISECOND, TASK_FOREVER, &drawDisplay, &taskScheduler, true); // 33ms ~ 30fps
-// Task mockInputHits(2 * TASK_SECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
+Task mockInputHits(10 * TASK_MILLISECOND, TASK_FOREVER, &simulateInputLevels, &taskScheduler, true);
 // Task mockMidiMessages(500 * TASK_MILLISECOND, TASK_FOREVER, &simulateMidiMessage, &taskScheduler, true);
 
 // ------------------------------
@@ -156,7 +159,7 @@ void setup() {
 
   // Connect the multiplexer and MIDI interface the channels
   Channel::setMux(&mux);
-  Channel::setMIDI(&MIDI);
+  // Channel::setMIDI(&MIDI);
 }
 
 void loop() {

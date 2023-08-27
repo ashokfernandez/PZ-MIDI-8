@@ -60,7 +60,7 @@ void Channel::update(void) {
   // Check if a note is playing and needs to be turned off
   if (this->_noteIsPlaying && (now - this->_lastNoteStartedMs >= TEMP_NOTE_TIME)) {
     // Send NoteOff
-    Channel::MIDI->sendNoteOff(this->_settings->get(NOTE), 0, 1);
+    // Channel::MIDI->sendNoteOff(this->_settings->get(NOTE), 0, 1);
     this->_noteIsPlaying = false;
   }
 
@@ -85,9 +85,12 @@ void Channel::update(void) {
       this->_retriggerBlock = true;
       this->_lastRetriggerBlockStartedMs = now;
 
+      // Update the level so we get visual feedback on the channel list view
+      this->setLevel(map(this->_analogInputPeakValue, 0, 1023, 0, 127));
+
       // Convert _analogInputPeakValue to MIDI velocity and send NoteOn
       int velocity = map(this->_analogInputPeakValue, 0, 1023, 0, 127); // Replace 0 and 1023 with actual min and max analog values
-      Channel::MIDI->sendNoteOn(this->_settings->get(NOTE), velocity, 1);
+      // Channel::MIDI->sendNoteOn(this->_settings->get(NOTE), velocity, 1);
       this->_noteIsPlaying = true;
       this->_lastNoteStartedMs = now;
     }
@@ -216,7 +219,7 @@ int8_t Channel::getLevel(void){
 
 void Channel::setLevel(int8_t level){
   // Floor the level to zero incase it goes negative
-  _level = level < 0 ? 0 : level;
+  _level = max(level, 0);
 }
 
 ChannelSettings* Channel::getSettings(void){
