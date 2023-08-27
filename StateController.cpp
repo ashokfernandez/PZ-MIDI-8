@@ -8,13 +8,30 @@
 StateController::StateController(Channel* channels){  
   this->channels = channels;
   this->page = CHANNEL_LIST;
-  this->selectedChannel = 0;
+  this->selectedChannel = NO_CHANNEL_SELECTED;
   this->editingParameter = false;
   this->selectedParameter = 0;
   this->switchHoldTime_ms = 0;
+  this->lastRotaryEncoderChange_ms = 0;
 }
 
 // Public Methods
+
+void StateController::update(void) {
+  switch(this->page){
+    case CHANNEL_LIST:
+      unsigned long now = millis();
+      // If we're on the channel list, check if the encoder hasn't been turned and timeout selection
+      if (now - this->lastRotaryEncoderChange_ms > SELECT_CHANNEL_TIMEOUT_MS) {
+        this->_deselectAllChannels();
+      }
+      break;
+    case CHANNEL_EDIT:
+      break;
+    case SAVE_IN_PROGRESS:
+      break;
+  }
+}
 
 void StateController::buttonClicked(void) {
   switch(this->page){
@@ -38,7 +55,7 @@ void StateController::buttonClicked(void) {
   }
 }
 
-void StateController::buttonHeldFor_ms(uint16_t time_ms) {
+void StateController::buttonHeldFor_ms(unsigned long time_ms) {
   switch(this->page){
     case CHANNEL_LIST:
       break;
@@ -77,6 +94,8 @@ void StateController::buttonLongClicked(void) {
 }
 
 void StateController::encoderIncremented(void) {
+  this->lastRotaryEncoderChange_ms = millis();
+  
   switch(this->page){
     // If we're on the channel list and the encoder is incremented, select the next channel
     case CHANNEL_LIST:
@@ -100,6 +119,8 @@ void StateController::encoderIncremented(void) {
 }
 
 void StateController::encoderDecremented(void) {
+  this->lastRotaryEncoderChange_ms = millis();
+
   switch(this->page){
     // If we're on the channel list and the encoder is decremented, select the previous channel
     case CHANNEL_LIST:
@@ -134,11 +155,19 @@ void StateController::_deselectAllChannels(void) {
 }
 
 void StateController::_incrementSelectedChannel(void) {
-  this->selectedChannel = clipValue(this->selectedChannel+1, 0, NUM_CHANNELS - 1, CLIP_WRAP_AROUND);
+  if (this->selectedChannel == NO_CHANNEL_SELECTED) {
+    this->selectedChannel = 0;
+  } else {
+    this->selectedChannel = clipValue(this->selectedChannel+1, 0, NUM_CHANNELS - 1, CLIP_WRAP_AROUND);
+  }
 }
 
 void StateController::_decrementSelectedChannel(void) {
-  this->selectedChannel = clipValue(this->selectedChannel-1, 0, NUM_CHANNELS - 1, CLIP_WRAP_AROUND);
+  if (this->selectedChannel == NO_CHANNEL_SELECTED) {
+    this->selectedChannel = NUM_CHANNELS - 1;
+  } else {
+    this->selectedChannel = clipValue(this->selectedChannel-1, 0, NUM_CHANNELS - 1, CLIP_WRAP_AROUND);
+  }
 }
 
 

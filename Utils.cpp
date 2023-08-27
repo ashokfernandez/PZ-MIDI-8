@@ -6,7 +6,7 @@ int8_t clipValue(int8_t value, int8_t min, int8_t max, bool wrap = false) {
         if (value > max) { 
             value = min; 
         } else if (value < min) {
-            value = max - 1;  
+            value = max;  
         }
     } else {
     // Clip values above max to max, values below min to min

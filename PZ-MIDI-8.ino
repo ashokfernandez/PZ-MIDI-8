@@ -83,6 +83,7 @@ void drawDisplay() { view->drawDisplay(); }
 void updateState() {
   button.update(); // Needed for long press functionality to work
   mux.scanAnalogInputs(); // Scan the multiplexer to update the analog input values
+  state->update(); // Update the state of the channels, checking for timeouts etc
   
   // Update the state of the channels
   for (uint8_t i = 0; i < NUM_CHANNELS; i++){
